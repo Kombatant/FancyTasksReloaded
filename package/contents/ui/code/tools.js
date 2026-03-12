@@ -93,7 +93,7 @@ function activateNextPrevTask(anchor, next) {
 
 function activateTask(index, model, modifiers, task) {
     if (modifiers & Qt.ShiftModifier) {
-        tasksModel.requestNewInstance(index);
+        backend.requestNewInstance(index, model.LauncherUrlWithoutIcon);
     } else if (model.IsGroupParent === true) {
 
         // Option 1 (default): Cycle through this group's tasks

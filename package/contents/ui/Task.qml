@@ -98,7 +98,7 @@ MouseArea {
         toolTipArea.hideToolTip();
     }
 
-    acceptedButtons: Qt.LeftButton | Qt.MidButton | Qt.BackButton | Qt.ForwardButton
+    acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.BackButton | Qt.ForwardButton
 
     onPidChanged: updateAudioStreams({delay: false})
     onAppNameChanged: updateAudioStreams({delay: false})
@@ -137,7 +137,7 @@ MouseArea {
     }
 
     onPressed: function(mouse) {
-        if (mouse.button == Qt.LeftButton || mouse.button == Qt.MidButton || mouse.button === Qt.BackButton || mouse.button === Qt.ForwardButton) {
+        if (mouse.button == Qt.LeftButton || mouse.button == Qt.MiddleButton || mouse.button === Qt.BackButton || mouse.button === Qt.ForwardButton) {
             pressed = true;
             pressX = mouse.x;
             pressY = mouse.y;
@@ -175,9 +175,9 @@ MouseArea {
         }
 
         if (pressed) {
-            if (mouse.button == Qt.MidButton) {
+            if (mouse.button == Qt.MiddleButton) {
                 if (plasmoid.configuration.middleClickAction === TaskManagerApplet.Backend.NewInstance) {
-                    tasksModel.requestNewInstance(modelIndex());
+                    backend.requestNewInstance(modelIndex(), model.LauncherUrlWithoutIcon);
                 } else if (plasmoid.configuration.middleClickAction === TaskManagerApplet.Backend.Close) {
                     tasks.taskClosedWithMouseMiddleButton = winIdList.slice()
                     tasksModel.requestClose(modelIndex());

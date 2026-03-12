@@ -77,6 +77,30 @@ QtObject {
         }
     }
 
+    function launchDesktopEntry(launcherUrl) {
+        if (!launcherUrl) return false;
+
+        var value = launcherUrl.toString().split("?")[0];
+        var desktopId = "";
+
+        if (value.startsWith("applications:")) {
+            desktopId = value.substring(13);
+        } else if (value.startsWith("file://")) {
+            var lastSlash = value.lastIndexOf("/");
+            desktopId = lastSlash !== -1 ? value.substring(lastSlash + 1) : value.substring(7);
+        } else if (value.endsWith(".desktop")) {
+            var slash = value.lastIndexOf("/");
+            desktopId = slash !== -1 ? value.substring(slash + 1) : value;
+        }
+
+        if (!desktopId) {
+            return false;
+        }
+
+        _processRunner.connectSource("gtk-launch '" + desktopId.replace(/'/g, "'\\''") + "'");
+        return true;
+    }
+
     // --- Desktop file resolution and parsing ---
 
     readonly property var _desktopSearchDirs: {
@@ -197,6 +221,56 @@ QtObject {
             }
         }
         return result;
+    }
+
+    function _desktopEntryExec(launcherUrl) {
+        if (!launcherUrl) return "";
+
+        var key = launcherUrl.toString();
+        var content = _desktopFileCache[key];
+        if (!content) {
+            cacheDesktopFile(launcherUrl);
+            return "";
+        }
+
+        var lines = content.split("\n");
+        var currentSection = "";
+
+        for (var i = 0; i < lines.length; ++i) {
+            var line = lines[i].trim();
+            if (line.startsWith("[")) {
+                currentSection = line;
+                continue;
+            }
+
+            if (currentSection === "[Desktop Entry]" && line.startsWith("Exec=")) {
+                return line.substring(5);
+            }
+        }
+
+        return "";
+    }
+
+    function requestNewInstance(index, launcherUrl) {
+        if (launcherUrl) {
+            var launcherPosition = tasksModel.launcherPosition(launcherUrl);
+            if (launcherPosition !== -1) {
+                tasksModel.requestNewInstance(tasksModel.makeModelIndex(launcherPosition));
+                return;
+            }
+
+            if (launchDesktopEntry(launcherUrl)) {
+                return;
+            }
+
+            var exec = _desktopEntryExec(launcherUrl);
+            if (exec) {
+                launchExec(exec);
+                return;
+            }
+        }
+
+        tasksModel.requestNewInstance(index);
     }
 
     function jumpListActions(launcherUrl, parent) {

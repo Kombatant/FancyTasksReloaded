@@ -303,7 +303,7 @@ PlasmaExtras.Menu {
         text: i18n("Open New Window")
         icon: "window-new"
 
-        onClicked: tasksModel.requestNewInstance(modelIndex)
+        onClicked: backend.requestNewInstance(modelIndex, get(atm.LauncherUrlWithoutIcon))
     }
 
     PlasmaExtras.MenuItem {
