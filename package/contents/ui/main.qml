@@ -25,6 +25,8 @@ PlasmoidItem {
 
     anchors.fill: parent
 
+    property bool supportsLaunchers: true
+
     property bool vertical: plasmoid.formFactor === PlasmaCore.Types.Vertical
     property bool iconsOnly: plasmoid.configuration.iconOnly
     property bool containsMouse: mouseTracker.containsMouse
