@@ -38,7 +38,7 @@ PlasmaExtras.Menu {
         }
     }
 
-    minimumWidth: visualParent.width
+    minimumWidth: visualParent ? visualParent.width : 0
 
     onStatusChanged: {
         if (visualParent && get(atm.LauncherUrlWithoutIcon) != "" && status === PlasmaExtras.Menu.Open) {
@@ -46,7 +46,6 @@ PlasmaExtras.Menu {
 
         } else if (status === PlasmaExtras.Menu.Closed) {
             menu.destroy();
-            backend.ungrabMouse(visualParent);
         }
     }
 
@@ -68,6 +67,7 @@ PlasmaExtras.Menu {
     }
 
     function show() {
+        Plasmoid.contextualActionsAboutToShow();
         loadDynamicLaunchActions(get(atm.LauncherUrlWithoutIcon));
         openRelative();
     }
@@ -136,21 +136,43 @@ PlasmaExtras.Menu {
 
             for (var i = 0; i < section["actions"].length; ++i) {
                 var item = newMenuItem(menu);
-                item.action = section["actions"][i];
+                var actionData = section["actions"][i];
 
-                // Crude way of manually eliding...
-                var elided = false;
-                textMetrics.text = Qt.binding(function() {
-                    return item.action.text;
-                });
+                if (actionData && typeof actionData.exec === "string") {
+                    // Plain JS action from QML Backend (.desktop file parsing)
+                    var displayText = actionData.text || "";
+                    item.icon = actionData.icon || "";
 
-                while (textMetrics.width > maximumWidth) {
-                    item.action.text = item.action.text.slice(0, -1);
-                    elided = true;
-                }
+                    var elided = false;
+                    textMetrics.text = displayText;
+                    while (textMetrics.width > maximumWidth) {
+                        displayText = displayText.slice(0, -1);
+                        textMetrics.text = displayText;
+                        elided = true;
+                    }
+                    if (elided) displayText += "…";
+                    item.text = displayText;
 
-                if (elided) {
-                    item.action.text += "…";
+                    (function(exec) {
+                        item.clicked.connect(function() { backend.launchExec(exec); });
+                    })(actionData.exec);
+                } else {
+                    // QAction from C++ backend
+                    item.action = actionData;
+
+                    var elided = false;
+                    textMetrics.text = Qt.binding(function() {
+                        return item.action.text;
+                    });
+
+                    while (textMetrics.width > maximumWidth) {
+                        item.action.text = item.action.text.slice(0, -1);
+                        elided = true;
+                    }
+
+                    if (elided) {
+                        item.action.text += "…";
+                    }
                 }
 
                 menu.addMenuItem(item, startNewInstanceItem);
@@ -297,7 +319,7 @@ PlasmaExtras.Menu {
         text: i18n("Move to &Desktop")
         icon: "virtual-desktops"
 
-        Connections {
+        readonly property Connections virtualDesktopsMenuConnections: Connections {
             target: virtualDesktopInfo
 
             function onNumberOfDesktopsChanged() {Qt.callLater(virtualDesktopsMenu.refresh)}
@@ -305,7 +327,7 @@ PlasmaExtras.Menu {
             function onDesktopNamesChanged() {Qt.callLater(virtualDesktopsMenu.refresh)}
         }
 
-        PlasmaExtras.Menu {
+        readonly property PlasmaExtras.Menu _virtualDesktopsMenu: PlasmaExtras.Menu {
             id: virtualDesktopsMenu
 
             visualParent: virtualDesktopsMenuItem.action
@@ -377,7 +399,7 @@ PlasmaExtras.Menu {
         text: i18n("Show in &Activities")
         icon: "activities"
 
-        Connections {
+        readonly property Connections activityInfoConnections: Connections {
             target: activityInfo
 
             function onNumberOfRunningActivitiesChanged() {
@@ -385,7 +407,7 @@ PlasmaExtras.Menu {
             }
         }
 
-        PlasmaExtras.Menu {
+        readonly property PlasmaExtras.Menu _activitiesDesktopsMenu: PlasmaExtras.Menu {
             id: activitiesDesktopsMenu
 
             visualParent: activitiesDesktopsMenuItem.action
@@ -517,14 +539,14 @@ PlasmaExtras.Menu {
                      && plasmoid.immutability !== PlasmaCore.Types.SystemImmutable
                      && (activityInfo.numberOfRunningActivities >= 2)
 
-        Connections {
+        readonly property Connections activitiesLaunchersConnections: Connections {
             target: activityInfo
             function onNumberOfRunningActivitiesChanged() {
                 activitiesDesktopsMenu.refresh()
             }
         }
 
-        PlasmaExtras.Menu {
+        readonly property PlasmaExtras.Menu _activitiesLaunchersMenu: PlasmaExtras.Menu {
             id: activitiesLaunchersMenu
             visualParent: showLauncherInActivitiesItem.action
 
@@ -609,7 +631,7 @@ PlasmaExtras.Menu {
         text: i18n("More")
         icon: "view-more-symbolic"
 
-        PlasmaExtras.Menu {
+        readonly property PlasmaExtras.Menu moreMenu: PlasmaExtras.Menu {
             visualParent: moreActionsMenuItem.action
 
             PlasmaExtras.MenuItem {
@@ -733,7 +755,7 @@ PlasmaExtras.Menu {
 
                 onClicked: configureAction.trigger()
 
-                Component.onCompleted: configureAction = plasmoid.action("configure")
+                Component.onCompleted: configureAction = Plasmoid.internalAction("configure")
             }
 
             PlasmaExtras.MenuItem {
@@ -747,7 +769,7 @@ PlasmaExtras.Menu {
 
                 onClicked: alternativesAction.trigger()
 
-                Component.onCompleted: alternativesAction = plasmoid.action("alternatives")
+                Component.onCompleted: alternativesAction = Plasmoid.internalAction("alternatives")
             }
         }
     }

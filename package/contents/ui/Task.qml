@@ -97,7 +97,7 @@ MouseArea {
         toolTipArea.hideToolTip();
     }
 
-    acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MidButton | Qt.BackButton | Qt.ForwardButton
+    acceptedButtons: Qt.LeftButton | Qt.MidButton | Qt.BackButton | Qt.ForwardButton
 
     onPidChanged: updateAudioStreams({delay: false})
     onAppNameChanged: updateAudioStreams({delay: false})
@@ -140,14 +140,6 @@ MouseArea {
             pressed = true;
             pressX = mouse.x;
             pressY = mouse.y;
-        } else if (mouse.button == Qt.RightButton) {
-            // When we're a launcher, there's no window controls, so we can show all
-            // places without the menu getting super huge.
-            if (model.IsLauncher === true) {
-                showContextMenu({showAllPlaces: true})
-            } else {
-                showContextMenu();
-            }
         }
     }
 
@@ -357,6 +349,27 @@ MouseArea {
         ignoreUnknownSignals: true // Plasma-PA might not be available
         function onStreamsChanged() {
             task.updateAudioStreams({delay: true})
+        }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        enabled: task.visible
+        hoverEnabled: false
+        preventStealing: true
+        propagateComposedEvents: false
+        z: 1000
+
+        onPressed: function(mouse) {
+            mouse.accepted = true;
+            task.forceActiveFocus();
+
+            if (model.IsLauncher === true) {
+                task.showContextMenu({showAllPlaces: true});
+            } else {
+                task.showContextMenu();
+            }
         }
     }
 
@@ -1023,5 +1036,10 @@ MouseArea {
         }
 
         updateAudioStreams({delay: false})
+
+        // Pre-cache .desktop file for context menu jump list actions
+        if (model.LauncherUrlWithoutIcon) {
+            backend.cacheDesktopFile(model.LauncherUrlWithoutIcon);
+        }
     }
 }

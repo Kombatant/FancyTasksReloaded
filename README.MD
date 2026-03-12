@@ -17,6 +17,7 @@ Fancy Tasks now targets Plasma 6.6 and newer. Make sure the Plasma 6 task manage
 
 1. Clone this repository with the following command `git clone https://github.com/alexankitty/FancyTasks`
 2. CD into the folder and run the script `install.sh`, or install directly with `kpackagetool6 --type Plasma/Applet --install ./package`
+	Important: the plasmoid package root is `./package`, not the repository root. Commands like `kpackagetool6 --type Plasma/Applet --upgrade .` will fail because `ui/main.qml` is only valid relative to `./package`.
 3. Right click your panel, click add widgets and search for fancy tasks.
 4. Right click the new task panel and click Configure Fancy Tasks... - everything you will want to configure to enable the new features will be in there. Default features are based on the KDE's team existing vision.
 
@@ -27,6 +28,7 @@ Fancy Tasks now targets Plasma 6.6 and newer. Make sure the Plasma 6 task manage
 ## Updating
 
 1. Run the `update.sh` script, or upgrade directly with `kpackagetool6 --type Plasma/Applet --upgrade ./package`.
+	Do not use `kpackagetool6 --type Plasma/Applet --upgrade .` from the repository root.
 2. It is recommended you log out and back into your session. plasmashell seems to exhibit some odd behaviors if the plasmoid is updated without clearing the session.
 
 ## Features
