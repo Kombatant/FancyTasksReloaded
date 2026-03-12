@@ -11,11 +11,9 @@ import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.plasma.private.taskmanager 0.1 as TaskManagerApplet
+import "taskmanager" as TaskManagerApplet
 
-Item {
-    width: childrenRect.width
-    height: childrenRect.height
+ConfigPage {
 
     property alias cfg_groupingStrategy: groupingStrategy.currentIndex
     property alias cfg_groupedTaskVisualization: groupedTaskVisualization.currentIndex

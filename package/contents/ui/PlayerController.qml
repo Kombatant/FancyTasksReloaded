@@ -11,6 +11,7 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 
+import org.kde.kirigami 2.20 as Kirigami
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
@@ -47,9 +48,9 @@ RowLayout {
 
     ColumnLayout {
         Layout.fillWidth: true
-        Layout.topMargin: PlasmaCore.Units.smallSpacing
-        Layout.bottomMargin: PlasmaCore.Units.smallSpacing
-        Layout.rightMargin: isWin ? PlasmaCore.Units.smallSpacing : PlasmaCore.Units.largeSpacing
+        Layout.topMargin: Kirigami.Units.smallSpacing
+        Layout.bottomMargin: Kirigami.Units.smallSpacing
+        Layout.rightMargin: isWin ? Kirigami.Units.smallSpacing : Kirigami.Units.largeSpacing
         spacing: 0
 
         ScrollableTextWrapper {
@@ -91,7 +92,7 @@ RowLayout {
                 lineHeight: 1
                 elide: parent.state ? Text.ElideNone : Text.ElideRight
                 text: artist
-                font: PlasmaCore.Theme.smallestFont
+                font.pointSize: Math.max(1, Qt.application.font.pointSize - 1)
                 textFormat: Text.PlainText
             }
         }

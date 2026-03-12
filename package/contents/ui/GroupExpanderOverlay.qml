@@ -6,9 +6,10 @@
 
 import QtQuick 2.15
 
+import org.kde.ksvg as KSvg
 import org.kde.plasma.core as PlasmaCore
 
-PlasmaCore.SvgItem {
+KSvg.SvgItem {
     id: arrow
 
     anchors {

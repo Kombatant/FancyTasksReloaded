@@ -6,15 +6,11 @@ import org.kde.kirigami 2.19 as Kirigami
 import org.kde.plasma.core as PlasmaCore
 import org.kde.kquickcontrols 2.0 as KQControls
 
-import org.kde.plasma.private.taskmanager 0.1 as TaskManagerApplet
-
-Kirigami.FormLayout {
-    anchors.left: parent.left
-    anchors.right: parent.right
+ConfigPage {
 
     property alias cfg_indicatorsEnabled: indicatorsEnabled.currentIndex
     property alias cfg_groupIconEnabled: groupIconEnabled.currentIndex
-    property alias cfg_indicatorProgress: indicatorProgress.checked 
+    property alias cfg_indicatorProgress: indicatorProgress.checked
     property alias cfg_indicatorProgressColor: indicatorProgressColor.color
     property alias cfg_disableInactiveIndicators: disableInactiveIndicators.checked
     property alias cfg_indicatorsAnimated: indicatorsAnimated.checked
@@ -33,8 +29,12 @@ Kirigami.FormLayout {
     property alias cfg_indicatorRadius: indicatorRadius.value
     property alias cfg_indicatorShrink: indicatorShrink.value
     property alias cfg_indicatorDominantColor: indicatorDominantColor.checked
-    property alias cfg_indicatorAccentColor:  indicatorAccentColor.checked
-    property alias cfg_indicatorCustomColor: indicatorCustomColor.color 
+    property alias cfg_indicatorAccentColor: indicatorAccentColor.checked
+    property alias cfg_indicatorCustomColor: indicatorCustomColor.color
+
+Kirigami.FormLayout {
+    anchors.left: parent.left
+    anchors.right: parent.right
 
     ComboBox {
         id: indicatorsEnabled
@@ -264,4 +264,5 @@ Kirigami.FormLayout {
     Item {
         Kirigami.FormData.isSection: true
     }
+}
 }

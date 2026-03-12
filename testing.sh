@@ -1,5 +1,15 @@
 #!/bin/sh
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-sh $SCRIPT_DIR/build.sh
-kpackagetool5 -u $SCRIPT_DIR/release/FancyTasks.tar.gz
-QML_DISABLE_DISK_CACHE=true plasmawindowed alexankitty.fancytasks
+set -eu
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+PACKAGE_ID="alexankitty.fancytasks"
+PACKAGE_PATH="$SCRIPT_DIR/package"
+LOCAL_PACKAGE_DIR="$HOME/.local/share/plasma/plasmoids/$PACKAGE_ID"
+
+if ! kpackagetool6 --type Plasma/Applet --upgrade "$PACKAGE_PATH"; then
+	kpackagetool6 --type Plasma/Applet --remove "$PACKAGE_ID" >/dev/null 2>&1 || true
+	rm -rf "$LOCAL_PACKAGE_DIR"
+	kpackagetool6 --type Plasma/Applet --install "$PACKAGE_PATH"
+fi
+
+QML_DISABLE_DISK_CACHE=true plasmawindowed -a alexankitty.fancytasks

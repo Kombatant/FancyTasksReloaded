@@ -6,6 +6,7 @@
 
 import QtQuick 2.15
 
+import org.kde.ksvg as KSvg
 import org.kde.plasma.core as PlasmaCore
 
 import "code/tools.js" as TaskTools
@@ -24,7 +25,7 @@ Item {
         width: parent.width * (task.smartLauncherItem.progress / 100)
         clip: true
 
-        PlasmaCore.FrameSvgItem {
+        KSvg.FrameSvgItem {
             enabledBorders: plasmoid.configuration.useBorders ? 1 | 2 | 4 | 8 : 0
             id: progressFrame
             width: background.width

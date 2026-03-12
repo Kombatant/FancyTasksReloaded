@@ -1,4 +1,5 @@
 {
+    "KPackageStructure": "Plasma/Applet",
     "KPlugin": {
         "Authors": [
             {
@@ -175,6 +176,7 @@
         "Website": "https://github.com/alexankitty/FancyTasks"
     },
     "X-Plasma-API": "declarativeappletscript",
+    "X-Plasma-API-Minimum-Version": "6.0",
     "X-Plasma-MainScript": "ui/main.qml",
     "X-Plasma-Provides": [
         "org.kde.plasma.multitasking"

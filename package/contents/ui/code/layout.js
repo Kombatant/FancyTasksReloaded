@@ -7,15 +7,24 @@
 .import org.kde.plasma.core as PlasmaCore
 .import org.kde.kirigami 2.19 as Kirigami
 
-const iconMargin = Math.round(PlasmaCore.Units.smallSpacing / 4);
-const labelMargin = PlasmaCore.Units.smallSpacing;
+var iconMargin = 1;
+var labelMargin = 1;
+
+function refreshConstants() {
+    if (tasks) {
+        iconMargin = Math.round(tasks.smallSpacing / 4);
+        labelMargin = tasks.smallSpacing;
+    }
+}
 
 function horizontalMargins() {
+    refreshConstants();
     const spacingAdjustment = (plasmoid.configuration.iconOnly) ? (Kirigami.Settings.tabletMode ? 3 : plasmoid.configuration.iconSpacing) : 1
     return (taskFrame.margins.left + taskFrame.margins.right) * spacingAdjustment;
 }
 
 function verticalMargins() {
+    refreshConstants();
     const spacingAdjustment = (plasmoid.configuration.iconOnly) ? (Kirigami.Settings.tabletMode ? 3 : plasmoid.configuration.iconSpacing) : 1
     return (taskFrame.margins.top + taskFrame.margins.bottom) * spacingAdjustment;
 }
@@ -23,8 +32,8 @@ function verticalMargins() {
 function adjustMargin(height, margin) {
     var available = height - verticalMargins();
 
-    if (available < PlasmaCore.Units.iconSizes.small) {
-        return Math.floor((margin * (PlasmaCore.Units.iconSizes.small / available)) / 3);
+    if (available < tasks.iconSizeSmall) {
+        return Math.floor((margin * (tasks.iconSizeSmall / available)) / 3);
     }
 
     return margin;
@@ -105,7 +114,7 @@ function preferredMinWidth() {
 
     if (!tasks.vertical && !tasks.iconsOnly) {
       width +=
-          (PlasmaCore.Units.smallSpacing * 2) +
+          (tasks.smallSpacing * 2) +
                     plasmoid.configuration.maxButtonLength;
     }
 
@@ -143,13 +152,13 @@ function preferredMaxHeight() {
                  tasks.iconsOnly ? tasks.width :
                     Math.max(
                         tasks.defaultFontHeight,
-                        PlasmaCore.Units.iconSizes.medium
+                        tasks.iconSizeMedium
                     )
              );
     } else {
       return verticalMargins() +
              Math.min(
-                 PlasmaCore.Units.iconSizes.small * 3,
+                 tasks.iconSizeSmall * 3,
                  tasks.defaultFontHeight * 3);
     }
 }
@@ -185,7 +194,7 @@ function taskHeight() {
 }
 
 function launcherWidth() {
-    var baseWidth = tasks.vertical ? preferredMinHeight() : Math.min(tasks.height, PlasmaCore.Units.iconSizes.small * 3);
+    var baseWidth = tasks.vertical ? preferredMinHeight() : Math.min(tasks.height, tasks.iconSizeSmall * 3);
 
     return (baseWidth + horizontalMargins())
         - (adjustMargin(baseWidth, taskFrame.margins.top) + adjustMargin(baseWidth, taskFrame.margins.bottom));

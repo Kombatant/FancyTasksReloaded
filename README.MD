@@ -16,7 +16,7 @@ If your distro does not include kirigami2, install it now. It's required for the
 Fancy Tasks now targets Plasma 6.6 and newer. Make sure the Plasma 6 task manager and Plasma workspace packages are installed so the task manager QML modules are available.
 
 1. Clone this repository with the following command `git clone https://github.com/alexankitty/FancyTasks`
-2. CD into the folder and run the script `install.sh`, you may need to chmod +x or prepend your shell before the script in order to run it
+2. CD into the folder and run the script `install.sh`, or install directly with `kpackagetool6 --type Plasma/Applet --install ./package`
 3. Right click your panel, click add widgets and search for fancy tasks.
 4. Right click the new task panel and click Configure Fancy Tasks... - everything you will want to configure to enable the new features will be in there. Default features are based on the KDE's team existing vision.
 
@@ -26,7 +26,7 @@ Fancy Tasks now targets Plasma 6.6 and newer. Make sure the Plasma 6 task manage
 
 ## Updating
 
-1. Run the update.sh script, it will automatically stop and restart plasma to make sure the new changes get loaded in.
+1. Run the `update.sh` script, or upgrade directly with `kpackagetool6 --type Plasma/Applet --upgrade ./package`.
 2. It is recommended you log out and back into your session. plasmashell seems to exhibit some odd behaviors if the plasmoid is updated without clearing the session.
 
 ## Features

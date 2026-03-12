@@ -6,13 +6,14 @@
 
 import QtQuick 2.15
 
+import org.kde.ksvg as KSvg
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.draganddrop 2.0
 import org.kde.kirigami 2.20 as Kirigami
 
-import org.kde.plasma.private.taskmanager 0.1 as TaskManagerApplet
+import "taskmanager" as TaskManagerApplet
 
 import QtQuick.Layouts 1.3
 
@@ -26,7 +27,7 @@ MouseArea {
 
     activeFocusOnTab: true
 
-    height: Math.max(tasks.defaultFontHeight, PlasmaCore.Units.iconSizes.medium) + LayoutManager.verticalMargins()
+    height: Math.max(tasks.defaultFontHeight, Kirigami.Units.iconSizes.medium) + LayoutManager.verticalMargins()
 
     visible: false
 
@@ -74,7 +75,7 @@ MouseArea {
         || (task.contextMenu && task.contextMenu.status === PlasmaExtras.Menu.Open)
         || (!!tasks.groupDialog && tasks.groupDialog.visualParent === task)
 
-    property string tintColor: Kirigami.ColorUtils.brightnessForColor(PlasmaCore.Theme.backgroundColor) ===
+    property string tintColor: Kirigami.ColorUtils.brightnessForColor(Kirigami.Theme.backgroundColor) ===
                                 Kirigami.ColorUtils.Dark ?
                                 "#ffffff" : "#000000"
 
@@ -230,7 +231,7 @@ MouseArea {
     onSmartLauncherEnabledChanged: {
         if (smartLauncherEnabled && !smartLauncherItem) {
             const smartLauncher = Qt.createQmlObject(`
-                import org.kde.plasma.private.taskmanager 0.1 as TaskManagerApplet;
+                import "taskmanager" as TaskManagerApplet;
 
                 TaskManagerApplet.SmartLauncherItem { }
             `, task);
@@ -288,7 +289,9 @@ MouseArea {
     function showContextMenu(args) {
         toolTipArea.hideImmediately();
         contextMenu = tasks.createContextMenu(task, modelIndex(), args);
-        contextMenu.show();
+        if (contextMenu && contextMenu.show) {
+            contextMenu.show();
+        }
     }
 
     function updateAudioStreams(args) {
@@ -343,7 +346,7 @@ MouseArea {
         Timer {
             id: timer
 
-            interval: PlasmaCore.Units.longDuration
+            interval: Kirigami.Units.longDuration
             repeat: false
 
             onTriggered: {
@@ -361,7 +364,7 @@ MouseArea {
         }
     }
 
-    PlasmaCore.FrameSvgItem {
+    KSvg.FrameSvgItem {
         id: frame
         Kirigami.ImageColors {
             id: imageColors
@@ -399,7 +402,7 @@ MouseArea {
         id: indicator
         visible: plasmoid.configuration.indicatorsEnabled ? true : false
         flow: Flow.LeftToRight
-        spacing: PlasmaCore.Units.smallSpacing
+        spacing: Kirigami.Units.smallSpacing
         clip: true
         Repeater {
 
@@ -429,7 +432,7 @@ MouseArea {
                 readonly property bool isFirst: index === 0
                 readonly property int adjust: plasmoid.configuration.indicatorShrink
                 readonly property int indicatorLength: plasmoid.configuration.indicatorLength
-                readonly property int spacing: PlasmaCore.Units.smallSpacing
+                readonly property int spacing: Kirigami.Units.smallSpacing
                 readonly property bool isVertical: {
                     if(plasmoid.formFactor === PlasmaCore.Types.Vertical && !plasmoid.configuration.indicatorOverride)
                     return true;
@@ -454,7 +457,7 @@ MouseArea {
                         colorEval = decoColor
                     }
                     if(plasmoid.configuration.indicatorAccentColor){
-                        colorEval = PlasmaCore.Theme.highlightColor
+                        colorEval = Kirigami.Theme.highlightColor
                     }
                     else if(!plasmoid.configuration.indicatorDominantColor && !plasmoid.configuration.indicatorAccentColor){
                         colorEval = plasmoid.configuration.indicatorCustomColor
@@ -722,8 +725,8 @@ MouseArea {
 
             var margins = vert ? LayoutManager.horizontalMargins() : LayoutManager.verticalMargins();
 
-            if ((size - margins) < PlasmaCore.Units.iconSizes.small) {
-                return Math.ceil((margin * (PlasmaCore.Units.iconSizes.small / size)) / 2);
+            if ((size - margins) < Kirigami.Units.iconSizes.small) {
+                return Math.ceil((margin * (Kirigami.Units.iconSizes.small / size)) / 2);
             }
 
             return margin;
@@ -732,13 +735,9 @@ MouseArea {
 
         //width: inPopup ? PlasmaCore.Units.iconSizes.small : Math.min(height, parent.width - LayoutManager.horizontalMargins())
 
-        PlasmaCore.IconItem {
+        Kirigami.Icon {
             id: icon
-            active: task.highlighted
             anchors.centerIn: parent
-            enabled: true
-            usesPlasmaTheme: false
-            roundToIconSize: false
 
             width: {
                 let isWider = parent.width > parent.height
@@ -759,12 +758,12 @@ MouseArea {
             // QTBUG anchors.fill in conjunction with the Loader doesn't reliably work on creation:
             // have a window with a badge, move it from one screen to another, the new task item on the
             // other screen will now have a glitched out badge mask.
-            width: icon.paintedWidth
-            height: icon.paintedHeight
+                width: icon.width
+                height: icon.height
             anchors.centerIn: icon
             asynchronous: true
             source: "TaskBadgeOverlay.qml"
-            active: height >= PlasmaCore.Units.iconSizes.small
+            active: height >= Kirigami.Units.iconSizes.small
                     && task.smartLauncherItem && task.smartLauncherItem.countVisible
         }
 
@@ -811,7 +810,7 @@ MouseArea {
         readonly property var indicatorScale: 1.2
 
         source: "AudioStream.qml"
-        width: Math.min(Math.min(iconBox.width, iconBox.height) * 0.4, PlasmaCore.Units.iconSizes.smallMedium)
+        width: Math.min(Math.min(iconBox.width, iconBox.height) * 0.4, Kirigami.Units.iconSizes.smallMedium)
         height: width
 
         Binding {
@@ -832,7 +831,7 @@ MouseArea {
         id: label
 
         visible: (inPopup || !iconsOnly && model.IsLauncher !== true
-            && (parent.width - iconBox.height - PlasmaCore.Units.smallSpacing) >= (tasks.defaultFontWidth * LayoutManager.minimumMColumns()))
+            && (parent.width - iconBox.height - Kirigami.Units.smallSpacing) >= (tasks.defaultFontWidth * LayoutManager.minimumMColumns()))
 
         anchors {
             fill: parent

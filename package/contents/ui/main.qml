@@ -8,24 +8,30 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQml 2.15
 
+import org.kde.kirigami 2.20 as Kirigami
+import org.kde.ksvg as KSvg
 import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.plasma5support as Plasma5Support
 import org.kde.plasma.core as PlasmaCore
 
 import org.kde.taskmanager 0.1 as TaskManager
-import org.kde.plasma.private.taskmanager 0.1 as TaskManagerApplet
+import "taskmanager" as TaskManagerApplet
 
 import "code/layout.js" as LayoutManager
 import "code/tools.js" as TaskTools
 
 
-MouseArea {
+PlasmoidItem {
     id: tasks
 
     anchors.fill: parent
-    hoverEnabled: true
 
     property bool vertical: plasmoid.formFactor === PlasmaCore.Types.Vertical
     property bool iconsOnly: plasmoid.configuration.iconOnly
+    property bool containsMouse: mouseTracker.containsMouse
+    property int smallSpacing: Kirigami.Units.smallSpacing
+    property int iconSizeSmall: Kirigami.Units.iconSizes.small
+    property int iconSizeMedium: Kirigami.Units.iconSizes.medium
     property int defaultFontWidth: Math.max(1, Math.ceil(defaultFontMetrics.advanceWidth))
     property int defaultFontHeight: Math.max(1, Math.ceil(defaultFontMetrics.height))
 
@@ -39,19 +45,18 @@ MouseArea {
 
     TextMetrics {
         id: defaultFontMetrics
-        font: PlasmaCore.Theme.defaultFont
+        font: Qt.application.font
         text: "m"
     }
 
-    Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
-
-    Plasmoid.constraintHints: PlasmaCore.Types.CanFillArea
-
-    Plasmoid.onUserConfiguringChanged: {
-        if (plasmoid.userConfiguring) {
-            groupDialog.visible = false;
-        }
+    MouseArea {
+        id: mouseTracker
+        anchors.fill: parent
+        acceptedButtons: Qt.NoButton
+        hoverEnabled: true
     }
+
+    preferredRepresentation: fullRepresentation
 
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -60,12 +65,12 @@ MouseArea {
 
 //BEGIN TODO: this is not precise enough: launchers are smaller than full tasks
 
-    Layout.preferredWidth: tasks.vertical ? PlasmaCore.Units.gridUnit * 10 :
+    Layout.preferredWidth: tasks.vertical ? Kirigami.Units.gridUnit * 10 :
                            (LayoutManager.logicalTaskCount() === 0 ? 0.01 : //Return a small non-zero value to make the panel account for the change in size
                            (LayoutManager.logicalTaskCount() * LayoutManager.preferredMaxWidth()) / LayoutManager.calculateStripes())
 
 
-    Layout.preferredHeight: !tasks.vertical ? PlasmaCore.Units.gridUnit * 2 :
+    Layout.preferredHeight: !tasks.vertical ? Kirigami.Units.gridUnit * 2 :
                             (LayoutManager.logicalTaskCount() === 0 ? 0.01 : //Same as above
                             (LayoutManager.logicalTaskCount() * LayoutManager.preferredMaxHeight()) / LayoutManager.calculateStripes())
 
@@ -99,8 +104,8 @@ MouseArea {
         }
     }
 
-    onExited: {
-        if (needLayoutRefresh) {
+    onContainsMouseChanged: {
+        if (!containsMouse && needLayoutRefresh) {
             LayoutManager.layout(taskRepeater)
             needLayoutRefresh = false;
         }
@@ -128,7 +133,7 @@ MouseArea {
         }
 
         virtualDesktop: virtualDesktopInfo.currentDesktop
-        screenGeometry: plasmoid.screenGeometry
+        screenGeometry: plasmoid.screenGeometry || Qt.rect(0, 0, tasks.width, tasks.height)
         activity: activityInfo.currentActivity
 
         filterByVirtualDesktop: plasmoid.configuration.showOnlyCurrentDesktop
@@ -221,7 +226,7 @@ MouseArea {
         }
     }
 
-    PlasmaCore.DataSource {
+    Plasma5Support.DataSource {
         id: mpris2Source
         engine: "mpris2"
         interval: 500 // update every half second
@@ -357,6 +362,12 @@ MouseArea {
     Connections {
         target: plasmoid
 
+        function onUserConfiguringChanged() {
+            if (plasmoid.userConfiguring && groupDialog) {
+                groupDialog.visible = false;
+            }
+        }
+
         function onLocationChanged() {
             // This is on a timer because the panel may not have
             // settled into position yet when the location prop-
@@ -387,10 +398,10 @@ MouseArea {
     TaskManagerApplet.DragHelper {
         id: dragHelper
 
-        dragIconSize: PlasmaCore.Units.iconSizes.medium
+        dragIconSize: Kirigami.Units.iconSizes.medium
     }
 
-    PlasmaCore.FrameSvgItem {
+    KSvg.FrameSvgItem {
         id: taskFrame
 
         visible: false;
@@ -399,7 +410,7 @@ MouseArea {
         prefix: "normal"
     }
 
-    PlasmaCore.Svg {
+    KSvg.Svg {
         id: taskSvg
 
         imagePath: "widgets/tasks"
@@ -553,6 +564,10 @@ MouseArea {
     }
 
     function createContextMenu(rootTask, modelIndex, args = {}) {
+        if (contextMenuComponent.status !== Component.Ready) {
+            return null;
+        }
+
         const initialArgs = Object.assign(args, {
             visualParent: rootTask,
             modelIndex,

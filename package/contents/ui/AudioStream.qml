@@ -6,6 +6,7 @@
 
 import QtQuick 2.15
 
+import org.kde.ksvg as KSvg
 import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami 2.20 as Kirigami
 import Qt5Compat.GraphicalEffects
@@ -56,7 +57,7 @@ MouseArea {
                  }
                  NumberAnimation {
                      property: "opacity"
-                     duration: PlasmaCore.Units.longDuration
+                     duration: Kirigami.Units.longDuration
                  }
              }
         },
@@ -66,7 +67,7 @@ MouseArea {
              SequentialAnimation {
                  NumberAnimation {
                      property: "opacity"
-                     duration: PlasmaCore.Units.longDuration
+                     duration: Kirigami.Units.longDuration
                  }
              }
         },
@@ -74,7 +75,7 @@ MouseArea {
              to: ""
              NumberAnimation {
                  property: "opacity"
-                 duration: PlasmaCore.Units.longDuration
+                 duration: Kirigami.Units.longDuration
              }
         }
     ]
@@ -82,7 +83,7 @@ MouseArea {
     opacity: 0
     visible: opacity > 0
 
-    PlasmaCore.FrameSvgItem {
+    KSvg.FrameSvgItem {
         id: audioStreamFrame
         anchors.fill: audioStreamIcon
         visible: parent.containsMouse && !plasmoid.configuration.buttonColorize ? true : false
@@ -98,21 +99,21 @@ MouseArea {
         visible: parent.containsMouse && plasmoid.configuration.buttonColorize ? true : false
     }
 
-    PlasmaCore.Svg {
+    KSvg.Svg {
         id: audioSvg
         imagePath: "icons/audio"
     }
 
-    PlasmaCore.SvgItem {
+    KSvg.SvgItem {
         id: audioStreamIcon
 
         // Need audio indicator twice, to keep iconBox in the center.
         readonly property var requiredSpace: Math.min(iconBox.width, iconBox.height)
-                                             + Math.min(Math.min(iconBox.width, iconBox.height), PlasmaCore.Units.iconSizes.smallMedium) * 2
+                                             + Math.min(Math.min(iconBox.width, iconBox.height), Kirigami.Units.iconSizes.smallMedium) * 2
         svg: audioSvg
         smooth: false
 
-        height: Math.round(Math.min(parent.height * indicatorScale, PlasmaCore.Units.iconSizes.smallMedium))
+        height: Math.round(Math.min(parent.height * indicatorScale, Kirigami.Units.iconSizes.smallMedium))
         width: height
 
         anchors {
@@ -144,7 +145,7 @@ MouseArea {
 
                 PropertyChanges {
                     target: audioStreamIconLoader
-                    width: PlasmaCore.Units.roundToIconSize(Math.min(Math.min(iconBox.width, iconBox.height), PlasmaCore.Units.iconSizes.smallMedium))
+                    width: Math.round(Math.min(Math.min(iconBox.width, iconBox.height), Kirigami.Units.iconSizes.smallMedium))
                 }
 
                 PropertyChanges {
@@ -170,7 +171,7 @@ MouseArea {
                     target: audioStreamIconLoader
 
                     anchors.topMargin: taskFrame.margins.top
-                    width: PlasmaCore.Units.roundToIconSize(Math.min(Math.min(iconBox.width, iconBox.height), PlasmaCore.Units.iconSizes.smallMedium))
+                    width: Math.round(Math.min(Math.min(iconBox.width, iconBox.height), Kirigami.Units.iconSizes.smallMedium))
                 }
 
                 PropertyChanges {

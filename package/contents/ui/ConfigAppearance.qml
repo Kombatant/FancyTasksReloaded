@@ -10,16 +10,13 @@ import QtQuick.Layouts 1.15
 
 import org.kde.kirigami 2.19 as Kirigami
 import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.plasmoid 2.0
 import org.kde.kquickcontrols 2.0 as KQControls
 
 
-Kirigami.FormLayout {
-    anchors.left: parent.left
-    anchors.right: parent.right
+ConfigPage {
 
     readonly property bool plasmaPaAvailable: Qt.createComponent("PulseAudio.qml").status === Component.Ready
-    readonly property bool plasmoidVertical: Plasmoid.formFactor === PlasmaCore.Types.Vertical
+    readonly property bool plasmoidVertical: plasmoid.formFactor === PlasmaCore.Types.Vertical
     readonly property bool iconOnly: plasmoid.configuration.iconOnly
 
     property alias cfg_showToolTips: showToolTips.checked
@@ -45,6 +42,10 @@ Kirigami.FormLayout {
     property alias cfg_disableButtonInactiveSvg: disableButtonInactiveSvg.checked
     property alias cfg_overridePlasmaButtonDirection: overridePlasmaButtonDirection.checked
     property alias cfg_plasmaButtonDirection: plasmaButtonDirection.currentIndex
+
+Kirigami.FormLayout {
+    anchors.left: parent.left
+    anchors.right: parent.right
 
     CheckBox {
         id: showToolTips
@@ -200,8 +201,8 @@ Kirigami.FormLayout {
         id: forceStripes
         text: plasmoidVertical ? i18n("Always arrange tasks in rows of as many columns") : i18n("Always arrange tasks in columns of as many rows")
         enabled: maxStripes.value > 1
-        checked: cfg_forceStripes || maxStripes.value === 1
-        onCheckedChanged: cfg_forceStripes = checked
+        checked: maxStripes.value === 1 ? true : cfg_forceStripes
+        onClicked: cfg_forceStripes = checked
     }
 
     SpinBox {
@@ -264,4 +265,5 @@ Kirigami.FormLayout {
         text: i18nc("@info:usagetip under a set of radio buttons when Touch Mode is on", "Automatically set to Large when in Touch Mode")
         font: Kirigami.Theme.smallFont
     }
+}
 }
