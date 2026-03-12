@@ -159,6 +159,7 @@ PlasmaExtras.Menu {
                 } else {
                     // QAction from C++ backend
                     item.action = actionData;
+                    item.icon = actionData.icon || "";
 
                     var elided = false;
                     textMetrics.text = Qt.binding(function() {
@@ -176,6 +177,10 @@ PlasmaExtras.Menu {
                 }
 
                 menu.addMenuItem(item, startNewInstanceItem);
+            }
+
+            if (section["actions"].length > 0) {
+                menu.addMenuItem(newSeparator(menu), startNewInstanceItem);
             }
         });
 
