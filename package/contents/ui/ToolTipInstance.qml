@@ -202,7 +202,21 @@ ColumnLayout {
 
             // Expose context for TaskPipeWirePreview.qml
             property string windowUuid: thumbnailSourceItem.winId
-            property bool isMinimized: thumbnailSourceItem.isMinimized
+            // Always keep the PipeWire stream live in tooltips; they are
+            // transient so the frozen-frame optimisation is unnecessary,
+            // and starting with layer.live=false when minimized would
+            // produce a blank texture.
+            property bool isMinimized: false
+        }
+
+        // Fallback icon when PipeWire cannot deliver a frame for a minimized window
+        Kirigami.Icon {
+            anchors.centerIn: hoverHandler
+            width: Kirigami.Units.iconSizes.large
+            height: width
+            source: icon
+            visible: pipeWireLoader.active && thumbnailSourceItem.isMinimized
+                     && (!pipeWireLoader.item || !pipeWireLoader.item.children[1] || pipeWireLoader.item.children[1].nodeId <= 0)
         }
 
         Loader {
