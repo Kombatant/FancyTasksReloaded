@@ -930,16 +930,22 @@ MouseArea {
             // --- Wayland: PipeWire screencasting via separate file ---
             // Loaded from a separate QML file so that missing org.kde.pipewire
             // doesn't cause an import error for the entire Task component.
+            // Unlike the X11 path which freezes a long-running layer, the
+            // PipeWire path creates a fresh stream on demand when the preview
+            // is shown (on minimize).  KWin provides the last visible frame
+            // for the screencast request, matching the tooltip strategy.
             Loader {
                 anchors.fill: parent
-                active: minimizedPreview.featureActive && minimizedPreview.isWayland
+                active: minimizedPreview.showPreview && minimizedPreview.isWayland
                 visible: active
                 asynchronous: true
                 source: "TaskPipeWirePreview.qml"
 
                 // Expose context for TaskPipeWirePreview.qml
                 property string windowUuid: minimizedPreview.resolvedWinUuid
-                property bool isMinimized: model.IsMinimized === true && !minimizedPreview.refreshingCache
+                // Keep the PipeWire stream always live — no layer freeze.
+                // The stream delivers the last visible frame from KWin.
+                property bool isMinimized: false
             }
 
             Rectangle {

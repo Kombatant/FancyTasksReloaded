@@ -28,12 +28,5 @@ Item {
         id: pipeWireItem
         anchors.fill: parent
         nodeId: screencastRequest.nodeId
-
-        // Cache the rendered frame to a GPU texture.
-        // While the window is visible, layer.live keeps the texture current.
-        // When minimized, layer.live becomes false, freezing the last frame.
-        layer.enabled: screencastRequest.nodeId > 0
-        layer.live: !root.parent || !root.parent.isMinimized
-        layer.smooth: true
     }
 }
