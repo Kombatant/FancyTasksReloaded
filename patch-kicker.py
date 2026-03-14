@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Binary patch for libkickerplugin.so to add alexankitty.fancytasks
+Binary patch for libkickerplugin.so to add org.kombatant.fancytasks
 to Kicker's hardcoded known task manager list.
 
 This replaces the unused "org.kde.plasma.expandingiconstaskmanager" entry
-with "alexankitty.fancytasks" so that Kickoff/Kicker shows the
+with "org.kombatant.fancytasks" so that Kickoff/Kicker shows the
 "Pin to Task Manager" option for FancyTasks.
 
 Re-run after every plasma-workspace package update.
@@ -24,7 +24,7 @@ LIB_PATH = Path("/usr/lib/qt6/qml/org/kde/plasma/private/kicker/libkickerplugin.
 BACKUP_PATH = LIB_PATH.with_suffix(".so.bak")
 
 OLD_STRING = b"org.kde.plasma.expandingiconstaskmanager"  # 40 bytes
-NEW_STRING = b"alexankitty.fancytasks"                    # 22 bytes
+NEW_STRING = b"org.kombatant.fancytasks"                 # 24 bytes
 
 # x86-64 instruction: mov $imm32, %esi  →  be XX 00 00 00
 MOV_ESI_OPCODE = 0xBE

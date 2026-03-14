@@ -83,7 +83,7 @@
         "EnabledByDefault": true,
         "Icon": "FancyTasks.png",
         
-        "Id": "alexankitty.fancytasks",
+        "Id": "org.kombatant.fancytasks",
         "License": "GPL-2.0+",
         "Name": "Fancy Tasks",
         "Name[af]": "Taakbestuurder",
