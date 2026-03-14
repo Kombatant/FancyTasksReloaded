@@ -1,102 +1,157 @@
-# Notice
-This branch now targets KDE Plasma 6 and has been updated for KDE 6.6-era Plasma/Qt 6 APIs. Plasma 5 is no longer the active target for this codebase. Help is always wanted and appreciated.  
-I'm still working on the project in limited time, so fixes and reviews may take a while. 
-
-# Contact
-You can reach me at ideas@alexankitty.com, by putting an issue on this github, by commenting on the [AUR package](https://aur.archlinux.org/packages/fancytasks), by commenting on the kde-look page, or on the [FancyTasks KDE Reddit community](https://www.reddit.com/r/fancytaskskde/).
-
 # FancyTasks
 
-![Fancy Tasks Icon](https://github.com/alexankitty/FancyTasks/blob/main/package/FancyTasks.png?raw=true)
+FancyTasks is a KDE Plasma task manager plasmoid for Plasma 6. It keeps the familiar taskbar workflow, then adds more styling, more layout control, and more behavior options than the stock task manager exposes by default.
 
-## Installing
+This repository is an actively maintained Plasma 6 fork of the original FancyTasks work by Alexandra Stone, itself based on KDE's task manager applet by Eike Hein.
 
-If your distro does not include kirigami2, install it now. It's required for the settings, and used for the dominant icon color effect. Python3 is required for installing.
+![Fancy Tasks Icon](package/FancyTasks.png)
 
-Fancy Tasks now targets Plasma 6.6 and newer. Make sure the Plasma 6 task manager and Plasma workspace packages are installed so the task manager QML modules are available.
+## Goals
 
-1. Clone this repository with the following command `git clone https://github.com/alexankitty/FancyTasks`
-2. CD into the folder and run the script `install.sh`, or install directly with `kpackagetool6 --type Plasma/Applet --install ./package`
-	Important: the plasmoid package root is `./package`, not the repository root. Commands like `kpackagetool6 --type Plasma/Applet --upgrade .` will fail because `ui/main.qml` is only valid relative to `./package`.
-3. Right click your panel, click add widgets and search for fancy tasks.
-4. Right click the new task panel and click Configure Fancy Tasks... - everything you will want to configure to enable the new features will be in there. Default features are based on the KDE's team existing vision.
-
-(Alternatively you should be able to double click the shell script to run it)
-
-(This package is also on the AUR and can be installed from there)
-
-## Updating
-
-1. Run the `update.sh` script, or upgrade directly with `kpackagetool6 --type Plasma/Applet --upgrade ./package`.
-	Do not use `kpackagetool6 --type Plasma/Applet --upgrade .` from the repository root.
-2. It is recommended you log out and back into your session. plasmashell seems to exhibit some odd behaviors if the plasmoid is updated without clearing the session.
+- Keep a traditional taskbar-style workflow with icons and optional labels.
+- Expose the customization Plasma users usually end up patching around by hand.
+- Stay usable on modern Plasma 6 systems without requiring users to rebuild KDE components.
+- Provide a practical fork that remains installable, testable, and maintainable outside the upstream desktop package tree.
 
 ## Features
 
-Features improvements tweaks and options to the original task manager plasmoid made by Eike Hein, licensed under GPL V2.0: [link](https://github.com/KDE/plasma-desktop/tree/master/applets/taskmanager).
+- Icons-only and text-label taskbar modes.
+- Configurable grouping, sorting, launcher separation, and click behavior.
+- Multiple grouped-task interaction modes, including cycling, tooltip thumbnails, side-by-side window display, and textual lists when compositor support is limited.
+- Adjustable task sizing, icon scaling, icon pixel sizing, spacing, and stripe layout.
+- Optional hover bounce, floating icon shadows, and minimized-window previews.
+- Audio-stream indicators for apps currently playing sound.
+- Custom indicator system with animated styles such as Metro, Ciliora, and Dashes.
+- Indicator position, size, color, min/max count, progress display, and minimized-state effects.
+- Button colorization using Plasma accent color, dominant icon color, or a custom color.
+- Plasma border and button-decoration overrides for floating or heavily customized panels.
 
-* Implemented adjustable task width.
-* Implemented switching between taskbar types.
-* Indicators based on dash to panel styles from gnome, using [latte-indicator-dashtopanel](https://github.com/psifidotos/latte-indicator-dashtopanel) as the reference implementation.
-* Customizable indicator locations and colorizing of plasma. Note: not every plasma theme will color in a pleasant way as it depends on how the SVGs are made. General rule of thumb is bright white does not colorize well.
-* Animations (Thanks ziomek64!)
-* Growing/Shrinking and desaturation of indicators on minimize (Thanks ziomek64!)
-* Customization of number of indicators displayed - limit 10.
+## Requirements
 
+- KDE Plasma 6 with the task manager and workspace packages installed.
+- `kpackagetool6`
+- `python3`
+- Kirigami/QML runtime provided by your Plasma desktop packages
 
-## Known Issues
-* Plasma private task manager and audio stream APIs are still used in a few places, so compatibility depends on the matching Plasma 6 desktop packages being present.
+FancyTasks currently depends on some Plasma private task manager and audio APIs, so it is expected to work best when your installed Plasma desktop packages match the target runtime.
 
-## To Do
-* Fix LTS support
-* Correct Metro to have *no* spacing (the multi app running indicator doesn't have a spacing in win10 and I apparently missed this)
-* Allow customization of the space between indicators (may have dangerous implications, required for presets)
-* Allow changing of animation duration, and possibly animating of button color and frame transitions.
-* Change styles (Metro, Ciliora, Dashes) to presets, switch preset to custom when modifying settings. Add in Dots as a preset.
-* Fix naming conventions to be more clear to users.
+## Installation
 
-## Translation Help Wanted!
-Information regarding submitting translations is available [here](https://github.com/alexankitty/FancyTasks/blob/main/package/translate/ReadMe.md).  
-Important note: Any time an update to strings is made, the translations need to be merged and a new po template needs to be created.  
-Finally, the metadata.json is done separately.
+Clone the current repository:
 
-## Pictures
-Colorful Tasks  
+```bash
+git clone https://github.com/Kombatant/FancyTasks.git
+cd FancyTasks
+```
 
-![Colorful tasks](https://github.com/alexankitty/FancyTasks/blob/main/docs/colorfulicons%20crop.png?raw=true)
+Install the plasmoid with the helper script:
 
-Metro  
+```bash
+./install.sh
+```
 
-![Metro](https://github.com/alexankitty/FancyTasks/blob/main/docs/metro.png?raw=true)
+That script:
 
-Ciliora  
+- removes the old legacy package ID `alexankitty.fancytasks` if it exists
+- installs or upgrades the current package from `./package`
+- installs the app icon into `~/.local/share/icons/hicolor/256x256/apps/`
 
-![Ciliora](https://github.com/alexankitty/FancyTasks/blob/main/docs/ciliora.png?raw=true)
+You can also install manually:
 
-Dashes  
+```bash
+kpackagetool6 --type Plasma/Applet --install ./package
+```
 
-![Dashes](https://github.com/alexankitty/FancyTasks/blob/main/docs/dashes.png?raw=true)
+Important: the plasmoid root is `./package`, not the repository root. Commands such as `kpackagetool6 --type Plasma/Applet --upgrade .` will fail because the package metadata expects `ui/main.qml` relative to `./package`.
 
-Dots  
+After installation:
 
-![Dots](https://github.com/alexankitty/FancyTasks/blob/main/docs/dots.png?raw=true)
+1. Right-click the Plasma panel.
+2. Choose `Add Widgets`.
+3. Search for `Fancy Tasks`.
+4. Add it to the panel and open `Configure Fancy Tasks...`.
 
-Desaturate minimized tasks  
+## Updating
 
-![Desaturated Minimized Tasks](https://github.com/alexankitty/FancyTasks/blob/main/docs/desaturate%20crop.png?raw=true)
+Use the provided update helper:
 
-Minimized task shrinking  
+```bash
+./update.sh
+```
 
-![Minimized task shrinking](https://github.com/alexankitty/FancyTasks/blob/main/docs/shrink%20crop.png?raw=true)
+This upgrades the package, restarts `plasmashell`, and reinstalls the icon asset. Manual upgrade is also possible:
 
-## Extra Notes
-I'm a solo developer working on this project in my free time so it may take me a bit of time to work on issues. You can help me out by either doing a PR with fixes and I'll validate that they work in the code, or put in an issue for things that need to be changed.
-Especially helpful will be settings names to make them more clear. I have a code bias unfortunately so it does make it exceedingly difficult to convey what everything does.
-Lastly any feedback is appreciated, and I'll try to implement it as soon as I can.
+```bash
+kpackagetool6 --type Plasma/Applet --upgrade ./package
+```
 
-## Supporters
-catraxx  
-Kloud  
+## Testing
 
-If you want to support the project and have your name added to the readme, you may do so below.  
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Q5Q4IFNAO)
+To run the plasmoid in a standalone Plasma window for development:
+
+```bash
+./testing.sh
+```
+
+## Special Note: `patch-kicker.py`
+
+This repository includes [`patch-kicker.py`](/home/kombatant/Dev/languages/fancytasks/patch-kicker.py), a Python utility that patches:
+
+```text
+/usr/lib/qt6/qml/org/kde/plasma/private/kicker/libkickerplugin.so
+```
+
+Why it exists:
+
+- Kicker/Kickoff keeps a hardcoded list of task manager plugin IDs.
+- FancyTasks uses `org.kombatant.fancytasks`.
+- Without the patch, launcher menus may not show `Pin to Task Manager` for FancyTasks and window previews when minimizing may not work correctly.
+
+What it does:
+
+- replaces the unused hardcoded string `org.kde.plasma.expandingiconstaskmanager`
+- inserts `org.kombatant.fancytasks`
+- updates the embedded string length
+- creates a backup beside the library as `libkickerplugin.so.bak`
+
+Usage:
+
+```bash
+sudo python3 patch-kicker.py
+sudo python3 patch-kicker.py --revert
+```
+
+Notes:
+
+- This modifies a system library, so it requires root privileges.
+- Re-run it after each `plasma-workspace` update, since package upgrades can replace the patched library.
+- Restart Plasma afterward:
+
+```bash
+kquitapp6 plasmashell && plasmashell --replace &
+```
+
+## Translations
+
+Translation helper files live under `package/translate/`. The existing translation notes are in [`package/translate/ReadMe.md`](/home/kombatant/Dev/languages/fancytasks/package/translate/ReadMe.md).
+
+## Screenshots
+
+![Colorful tasks](docs/colorfulicons%20crop.png)
+![Metro](docs/metro.png)
+![Ciliora](docs/ciliora.png)
+![Dashes](docs/dashes.png)
+![Dots](docs/dots.png)
+![Desaturated minimized tasks](docs/desaturate%20crop.png)
+![Minimized task shrinking](docs/shrink%20crop.png)
+
+## Contact
+
+Issues, bug reports, and pull requests should go through the GitHub repository:
+
+- <https://github.com/Kombatant/FancyTasks>
+- <https://github.com/Kombatant/FancyTasks/issues>
+
+## License
+
+FancyTasks is distributed under the GPL. See [`LICENSE`](/home/kombatant/Dev/languages/fancytasks/LICENSE).
