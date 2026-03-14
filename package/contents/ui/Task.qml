@@ -1013,11 +1013,10 @@ MouseArea {
                 repeat: false
             }
 
-            // --- X11: PlasmaCore.WindowThumbnail with layer freeze ---
-            PlasmaCore.WindowThumbnail {
+            Item {
+                id: previewContent
                 anchors.fill: parent
-                visible: minimizedPreview.isX11
-                winId: minimizedPreview.resolvedWinId
+                visible: minimizedPreview.showPreview
 
                 transform: [
                     Translate {
@@ -1036,46 +1035,93 @@ MouseArea {
                     }
                 ]
 
-                layer.enabled: minimizedPreview.featureActive && minimizedPreview.isX11
-                layer.live: model.IsMinimized !== true || minimizedPreview.refreshingCache
-                layer.smooth: true
-            }
+                DropShadow {
+                    anchors.fill: previewSurface
+                    visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 0 && previewContent.opacity > 0
+                    cached: true
+                    transparentBorder: true
+                    horizontalOffset: Math.max(1, Math.round(previewSurface.width * 0.05))
+                    verticalOffset: Math.max(1, Math.round(previewSurface.height * 0.06))
+                    radius: Math.max(4, Math.round(previewSurface.height * 0.16))
+                    samples: Math.max(9, 1 + (radius * 2))
+                    color: task.iconShadowColor
+                    source: previewSurface
+                }
 
-            // --- Wayland: PipeWire screencasting via separate file ---
-            // Loaded from a separate QML file so that missing org.kde.pipewire
-            // doesn't cause an import error for the entire Task component.
-            // Unlike the X11 path which freezes a long-running layer, the
-            // PipeWire path creates a fresh stream on demand when the preview
-            // is shown (on minimize).  KWin provides the last visible frame
-            // for the screencast request, matching the tooltip strategy.
-            Loader {
-                anchors.fill: parent
-                active: minimizedPreview.showPreview && minimizedPreview.isWayland
-                visible: active
-                asynchronous: true
-                source: "TaskPipeWirePreview.qml"
+                DropShadow {
+                    anchors.fill: previewSurface
+                    visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 1 && previewContent.opacity > 0
+                    cached: true
+                    transparentBorder: true
+                    horizontalOffset: Math.max(1, Math.round(previewSurface.width * 0.03))
+                    verticalOffset: Math.max(1, Math.round(previewSurface.height * 0.03))
+                    radius: Math.max(3, Math.round(previewSurface.height * 0.08))
+                    samples: Math.max(9, 1 + (radius * 2))
+                    color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 0.8))
+                    source: previewSurface
+                }
 
-                // Expose context for TaskPipeWirePreview.qml
-                property string windowUuid: minimizedPreview.resolvedWinUuid
-                // Keep the PipeWire stream always live — no layer freeze.
-                // The stream delivers the last visible frame from KWin.
-                property bool isMinimized: false
-                transform: [
-                    Translate {
-                        x: (plasmoid.configuration.hoverBounce && task.highlighted) ? (plasmoid.location === PlasmaCore.Types.LeftEdge ? -Math.min(12, icon.width * 0.12) : (plasmoid.location === PlasmaCore.Types.RightEdge ? Math.min(12, icon.width * 0.12) : 0)) : 0
-                        y: (plasmoid.configuration.hoverBounce && task.highlighted) ? (plasmoid.location === PlasmaCore.Types.BottomEdge ? -Math.min(12, icon.height * 0.12) : (plasmoid.location === PlasmaCore.Types.TopEdge ? Math.min(12, icon.height * 0.12) : 0)) : 0
-                        Behavior on x { NumberAnimation { duration: 300; easing.type: Easing.OutBack } }
-                        Behavior on y { NumberAnimation { duration: 300; easing.type: Easing.OutBack } }
-                    },
-                    Scale {
-                        origin.x: width / 2
-                        origin.y: height / 2
-                        xScale: (plasmoid.configuration.hoverBounce && task.highlighted) ? 1.06 : 1.0
-                        yScale: (plasmoid.configuration.hoverBounce && task.highlighted) ? 1.06 : 1.0
-                        Behavior on xScale { NumberAnimation { duration: 300; easing.type: Easing.OutBack } }
-                        Behavior on yScale { NumberAnimation { duration: 300; easing.type: Easing.OutBack } }
+                DropShadow {
+                    anchors.fill: previewSurface
+                    visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 1 && previewContent.opacity > 0
+                    cached: true
+                    transparentBorder: true
+                    horizontalOffset: Math.max(2, Math.round(previewSurface.width * 0.07))
+                    verticalOffset: Math.max(2, Math.round(previewSurface.height * 0.12))
+                    radius: Math.max(8, Math.round(previewSurface.height * 0.24))
+                    samples: Math.max(17, 1 + (radius * 2))
+                    color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 0.45))
+                    source: previewSurface
+                }
+
+                Glow {
+                    anchors.fill: previewSurface
+                    visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 2 && previewContent.opacity > 0
+                    cached: true
+                    transparentBorder: true
+                    radius: Math.max(6, Math.round(previewSurface.height * 0.18))
+                    samples: Math.max(13, 1 + (radius * 2))
+                    spread: 0.18
+                    color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 1.1))
+                    source: previewSurface
+                }
+
+                Item {
+                    id: previewSurface
+                    anchors.fill: parent
+
+                    // --- X11: PlasmaCore.WindowThumbnail with layer freeze ---
+                    PlasmaCore.WindowThumbnail {
+                        anchors.fill: parent
+                        visible: minimizedPreview.isX11
+                        winId: minimizedPreview.resolvedWinId
+
+                        layer.enabled: minimizedPreview.featureActive && minimizedPreview.isX11
+                        layer.live: model.IsMinimized !== true || minimizedPreview.refreshingCache
+                        layer.smooth: true
                     }
-                ]
+
+                    // --- Wayland: PipeWire screencasting via separate file ---
+                    // Loaded from a separate QML file so that missing org.kde.pipewire
+                    // doesn't cause an import error for the entire Task component.
+                    // Unlike the X11 path which freezes a long-running layer, the
+                    // PipeWire path creates a fresh stream on demand when the preview
+                    // is shown (on minimize).  KWin provides the last visible frame
+                    // for the screencast request, matching the tooltip strategy.
+                    Loader {
+                        anchors.fill: parent
+                        active: minimizedPreview.showPreview && minimizedPreview.isWayland
+                        visible: active
+                        asynchronous: true
+                        source: "TaskPipeWirePreview.qml"
+
+                        // Expose context for TaskPipeWirePreview.qml
+                        property string windowUuid: minimizedPreview.resolvedWinUuid
+                        // Keep the PipeWire stream always live — no layer freeze.
+                        // The stream delivers the last visible frame from KWin.
+                        property bool isMinimized: false
+                    }
+                }
             }
 
             Item {
@@ -1099,12 +1145,11 @@ MouseArea {
                     return 0
                 }
 
-                Kirigami.Icon {
+                Item {
                     id: previewBadgeIcon
                     anchors.centerIn: parent
                     width: minimizedPreview.badgeSize
                     height: width
-                    source: model.decoration
                     transform: [
                         Translate {
                             x: (plasmoid.configuration.hoverBounce && task.highlighted) ? (plasmoid.location === PlasmaCore.Types.LeftEdge ? -Math.min(12, width * 0.12) : (plasmoid.location === PlasmaCore.Types.RightEdge ? Math.min(12, width * 0.12) : 0)) : 0
@@ -1121,6 +1166,63 @@ MouseArea {
                             Behavior on yScale { NumberAnimation { duration: 300; easing.type: Easing.OutBack } }
                         }
                     ]
+
+                    DropShadow {
+                        anchors.fill: previewBadgeImage
+                        visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 0 && previewBadgeIcon.opacity > 0
+                        cached: true
+                        transparentBorder: true
+                        horizontalOffset: Math.max(1, Math.round(previewBadgeImage.width * 0.05))
+                        verticalOffset: Math.max(1, Math.round(previewBadgeImage.height * 0.06))
+                        radius: Math.max(3, Math.round(previewBadgeImage.height * 0.16))
+                        samples: Math.max(9, 1 + (radius * 2))
+                        color: task.iconShadowColor
+                        source: previewBadgeImage
+                    }
+
+                    DropShadow {
+                        anchors.fill: previewBadgeImage
+                        visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 1 && previewBadgeIcon.opacity > 0
+                        cached: true
+                        transparentBorder: true
+                        horizontalOffset: Math.max(1, Math.round(previewBadgeImage.width * 0.03))
+                        verticalOffset: Math.max(1, Math.round(previewBadgeImage.height * 0.03))
+                        radius: Math.max(2, Math.round(previewBadgeImage.height * 0.08))
+                        samples: Math.max(7, 1 + (radius * 2))
+                        color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 0.8))
+                        source: previewBadgeImage
+                    }
+
+                    DropShadow {
+                        anchors.fill: previewBadgeImage
+                        visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 1 && previewBadgeIcon.opacity > 0
+                        cached: true
+                        transparentBorder: true
+                        horizontalOffset: Math.max(1, Math.round(previewBadgeImage.width * 0.07))
+                        verticalOffset: Math.max(1, Math.round(previewBadgeImage.height * 0.12))
+                        radius: Math.max(5, Math.round(previewBadgeImage.height * 0.24))
+                        samples: Math.max(11, 1 + (radius * 2))
+                        color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 0.45))
+                        source: previewBadgeImage
+                    }
+
+                    Glow {
+                        anchors.fill: previewBadgeImage
+                        visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 2 && previewBadgeIcon.opacity > 0
+                        cached: true
+                        transparentBorder: true
+                        radius: Math.max(4, Math.round(previewBadgeImage.height * 0.18))
+                        samples: Math.max(9, 1 + (radius * 2))
+                        spread: 0.18
+                        color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 1.1))
+                        source: previewBadgeImage
+                    }
+
+                    Kirigami.Icon {
+                        id: previewBadgeImage
+                        anchors.fill: parent
+                        source: model.decoration
+                    }
                 }
             }
         }
