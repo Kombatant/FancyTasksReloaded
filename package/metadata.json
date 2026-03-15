@@ -130,7 +130,7 @@
             }
         ],
         "Category": "Windows and Tasks",
-        "Description": "Maintained Plasma 6 fork of FancyTasks Reloaded with taskbar customization, styling, and launcher integration improvements.",
+        "Description": "Fork of FancyTasks with taskbar customization, styling, and launcher integration improvements.",
         "Description[ar]": "مبدل نوافذ تقليدي بنمط شريط المهام يعرض الأيقونات والنص",
         "Description[az]": "Nişanlar və mətn göstərən klassik tapşırıq paneli üslubunda pəncərə dəyişdirici",
         "Description[bg]": "Класически превключвател на прозорци в стил лента на задачите, показващ икони и текст",
@@ -174,8 +174,8 @@
         "ServiceTypes": [
             "Plasma/Applet"
         ],
-        "Version": "4.1",
-        "Website": "https://github.com/Kombatant/FancyTasks"
+        "Version": "0.3",
+        "Website": "https://github.com/Kombatant/FancyTasksReloaded"
     },
     "X-Plasma-API": "declarativeappletscript",
     "X-Plasma-API-Minimum-Version": "6.0",
