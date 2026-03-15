@@ -369,7 +369,7 @@ PlasmoidItem {
     // the saved launcher list to restore the correct sort order.
     Timer {
         id: launcherReconcileTimer
-        interval: 1500
+        interval: 100
         repeat: false
         running: true          // starts ticking at Component creation
         onTriggered: {
