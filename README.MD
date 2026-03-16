@@ -1,5 +1,8 @@
 # FancyTasks Reloaded
 
+> [!IMPORTANT]  
+> Used various LLMs as a playground for code generation and assistance in forking/structuring/coding the project.
+
 FancyTasks Reloaded is a KDE Plasma task manager plasmoid for Plasma 6. It keeps the familiar taskbar workflow, then adds more styling, more layout control, and more behavior options than the stock task manager exposes by default.
 
 This repository is an actively maintained Plasma 6 fork of the original FancyTasks plasmoid (found here: https://github.com/alexankitty/FancyTasks), itself based on KDE's task manager applet (found here: https://invent.kde.org/plasma/plasma-workspace/-/tree/master/applets/taskmanager)
