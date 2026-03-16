@@ -4,6 +4,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
+// @ts-nocheck
+
 .import org.kde.plasma.core as PlasmaCore
 .import org.kde.kirigami 2.19 as Kirigami
 
