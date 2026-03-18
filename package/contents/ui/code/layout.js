@@ -22,13 +22,20 @@ function refreshConstants() {
 function horizontalMargins() {
     refreshConstants();
     const spacingAdjustment = Kirigami.Settings.tabletMode ? 3 : plasmoid.configuration.iconSpacing;
-    return (taskFrame.margins.left + taskFrame.margins.right) * spacingAdjustment;
+    const baseMargins = taskFrame.margins.left + taskFrame.margins.right;
+
+    // Some Plasma themes expose zero horizontal SVG margins for task buttons,
+    // which made the icon spacing setting a no-op. Fall back to a small
+    // layout-derived margin so the setting still visibly changes icon gaps.
+    return Math.max(baseMargins, Math.round(tasks.smallSpacing / 2)) * spacingAdjustment;
 }
 
 function verticalMargins() {
     refreshConstants();
     const spacingAdjustment = Kirigami.Settings.tabletMode ? 3 : plasmoid.configuration.iconSpacing;
-    return (taskFrame.margins.top + taskFrame.margins.bottom) * spacingAdjustment;
+    const baseMargins = taskFrame.margins.top + taskFrame.margins.bottom;
+
+    return Math.max(baseMargins, Math.round(tasks.smallSpacing / 2)) * spacingAdjustment;
 }
 
 function adjustMargin(height, margin) {
