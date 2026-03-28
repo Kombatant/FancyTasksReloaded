@@ -9,6 +9,12 @@ import org.kde.kquickcontrols 2.0 as KQControls
 ConfigPage {
 
     property int cfg_indicatorsEnabled: 1
+    readonly property bool metroStyleSelected: indicatorStyle.currentIndex === 0
+    readonly property bool cilioraStyleSelected: indicatorStyle.currentIndex === 1
+    readonly property bool dashesStyleSelected: indicatorStyle.currentIndex === 2
+    readonly property bool dotsStyleSelected: indicatorStyle.currentIndex === 3
+    readonly property bool segmentedStyleSelected: metroStyleSelected || cilioraStyleSelected
+    readonly property bool shrinkControlsBrokenForStyle: metroStyleSelected || cilioraStyleSelected || dashesStyleSelected
     property alias cfg_groupIconEnabled: groupIconEnabled.currentIndex
     property alias cfg_indicatorProgress: indicatorProgress.checked
     property alias cfg_indicatorProgressColor: indicatorProgressColor.color
@@ -178,15 +184,15 @@ Kirigami.FormLayout {
     }
 
     CheckBox {
-        enabled: indicatorsEnabled.currentIndex
+        enabled: indicatorsEnabled.currentIndex && !shrinkControlsBrokenForStyle
         id: indicatorGrow
         text: i18n("Shrink when minimized")
     }
 
     SpinBox {
         id: indicatorGrowFactor
-        enabled: indicatorsEnabled.currentIndex
-        visible: indicatorGrow.checked
+        enabled: indicatorsEnabled.currentIndex && !shrinkControlsBrokenForStyle
+        visible: indicatorGrow.checked || shrinkControlsBrokenForStyle
         from: 100
         to: 10 * 100
         stepSize: 25
@@ -209,6 +215,18 @@ Kirigami.FormLayout {
         }
     }
 
+    Label {
+        visible: indicatorsEnabled.currentIndex && (metroStyleSelected || cilioraStyleSelected)
+        text: i18n("Metro and Ciliora currently ignore shrink-on-minimize and growth/shrink factor.")
+        font: Kirigami.Theme.smallFont
+    }
+
+    Label {
+        visible: indicatorsEnabled.currentIndex && dashesStyleSelected
+        text: i18n("Dashes currently does not apply shrink/grow only when minimized, so these controls are disabled.")
+        font: Kirigami.Theme.smallFont
+    }
+
     Item {
         Kirigami.FormData.isSection: true
     }
@@ -222,27 +240,57 @@ Kirigami.FormLayout {
     }
 
     SpinBox {
-        enabled: indicatorsEnabled.currentIndex
+        enabled: indicatorsEnabled.currentIndex && !dotsStyleSelected
         id: indicatorLength
         Kirigami.FormData.label: i18n("Indicator length (px):")
         from: 1
         to: 999
     }
 
+    Label {
+        visible: indicatorsEnabled.currentIndex && segmentedStyleSelected
+        text: i18n("In Metro and Ciliora, length is mainly visible for grouped windows with multiple indicator segments.")
+        font: Kirigami.Theme.smallFont
+    }
+
     SpinBox {
-        enabled: indicatorsEnabled.currentIndex
+        enabled: indicatorsEnabled.currentIndex && !dotsStyleSelected
         id: indicatorRadius
         Kirigami.FormData.label: i18n("Indicator Radius (%):")
         from: 0
         to: 100
     }
 
+    Label {
+        visible: indicatorsEnabled.currentIndex && dotsStyleSelected
+        text: i18n("Dots are always circular, so radius does not apply to this style.")
+        font: Kirigami.Theme.smallFont
+    }
+
     SpinBox {
-        enabled: indicatorsEnabled.currentIndex
+        enabled: indicatorsEnabled.currentIndex && !dotsStyleSelected
         id: indicatorShrink
         Kirigami.FormData.label: i18n("Indicator margin (px):")
         from: 0
         to: 999
+    }
+
+    Label {
+        visible: indicatorsEnabled.currentIndex && segmentedStyleSelected
+        text: i18n("In Metro and Ciliora, margin mainly reduces the primary indicator segment.")
+        font: Kirigami.Theme.smallFont
+    }
+
+    Label {
+        visible: indicatorsEnabled.currentIndex && dashesStyleSelected
+        text: i18n("In Dashes, margin mainly reduces the first dash.")
+        font: Kirigami.Theme.smallFont
+    }
+
+    Label {
+        visible: indicatorsEnabled.currentIndex && dotsStyleSelected
+        text: i18n("Dots use Indicator size as the dot diameter. Length, radius, and margin do not apply.")
+        font: Kirigami.Theme.smallFont
     }
 
 

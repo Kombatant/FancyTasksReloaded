@@ -865,10 +865,9 @@ MouseArea {
         flow: Flow.LeftToRight
         spacing: Kirigami.Units.smallSpacing
         clip: true
-        readonly property int dotDiameter: Math.max(
-            Math.max(plasmoid.configuration.indicatorSize, plasmoid.configuration.indicatorLength),
-            Math.round(Kirigami.Units.smallSpacing * 1.5)
-        )
+        readonly property int dotDiameter: task.isDots
+            ? Math.max(plasmoid.configuration.indicatorSize, Math.round(Kirigami.Units.smallSpacing * 1.5))
+            : Math.max(plasmoid.configuration.indicatorSize, plasmoid.configuration.indicatorLength)
         readonly property int effectiveThickness: task.isDots ? dotDiameter : plasmoid.configuration.indicatorSize
         Repeater {
 
@@ -945,16 +944,21 @@ MouseArea {
                             indicatorComputedSize = mainSize - (Math.min(task.childCount, maxStates === 1 ? 0 : maxStates)  * (spacing + indicatorLength)) - adjust
                             break
                             case 2:
+                            indicatorComputedSize = (plasmoid.configuration.indicatorGrow && task.state !== "minimized" ? indicatorLength * growFactor : indicatorLength) - adjustment
+                            break
                             case 3:
-                            indicatorComputedSize = plasmoid.configuration.indicatorGrow && task.state !== "minimized" ? indicatorLength * growFactor : indicatorLength
+                            indicatorComputedSize = plasmoid.configuration.indicatorGrow && task.state !== "minimized"
+                                ? plasmoid.configuration.indicatorSize * growFactor
+                                : plasmoid.configuration.indicatorSize
                             break
                             default:
                             break
                         }
                     }
                     else {
-                        indicatorComputedSize = indicatorLength
+                        indicatorComputedSize = task.isDots ? plasmoid.configuration.indicatorSize : indicatorLength
                     }
+                    indicatorComputedSize = Math.max(1, indicatorComputedSize)
                     if(task.isDots) {
                         indicatorComputedSize = Math.max(indicatorComputedSize, dotDiameter)
                     }
@@ -1228,6 +1232,23 @@ MouseArea {
         Item {
             id: icon
             anchors.centerIn: parent
+            // Keep a small gap so a large icon does not visually collide with the indicator
+            // without changing the preview container geometry.
+            readonly property int indicatorGap: indicator.visible ? Math.max(2, Math.round(Kirigami.Units.smallSpacing / 2)) : 0
+            readonly property int leftIndicatorReserve: indicator.visible && indicator.state === "left"
+                ? indicator.effectiveThickness + plasmoid.configuration.indicatorEdgeOffset + indicatorGap
+                : 0
+            readonly property int rightIndicatorReserve: indicator.visible && indicator.state === "right"
+                ? indicator.effectiveThickness + plasmoid.configuration.indicatorEdgeOffset + indicatorGap
+                : 0
+            readonly property int topIndicatorReserve: indicator.visible && indicator.state === "top"
+                ? indicator.effectiveThickness + plasmoid.configuration.indicatorEdgeOffset + indicatorGap
+                : 0
+            readonly property int bottomIndicatorReserve: indicator.visible && indicator.state === "bottom"
+                ? indicator.effectiveThickness + plasmoid.configuration.indicatorEdgeOffset + indicatorGap
+                : 0
+            anchors.horizontalCenterOffset: Math.round((leftIndicatorReserve - rightIndicatorReserve) / 2)
+            anchors.verticalCenterOffset: Math.round((topIndicatorReserve - bottomIndicatorReserve) / 2)
             readonly property bool groupedFrameStackVisible: task.showStaticIconFrame
                 && model.IsGroupParent === true
             readonly property real groupedFrameStackOffset: Math.max(3, Math.round(Math.min(width, height) * 0.13))
@@ -1257,14 +1278,16 @@ MouseArea {
             }
 
             width: {
-                let isWider = parent.width > parent.height
+                const availableWidth = Math.max(1, parent.width - leftIndicatorReserve - rightIndicatorReserve)
+                const availableHeight = Math.max(1, parent.height - topIndicatorReserve - bottomIndicatorReserve)
+                let isWider = availableWidth > availableHeight
                 if(iconsOnly && !plasmoid.configuration.iconSizeOverride){
-                    return isWider ? parent.height * (plasmoid.configuration.iconScale / 100) : parent.width * (plasmoid.configuration.iconScale / 100)
+                    return isWider ? availableHeight * (plasmoid.configuration.iconScale / 100) : availableWidth * (plasmoid.configuration.iconScale / 100)
                 }
                 if(iconsOnly && plasmoid.configuration.iconSizeOverride){
                     return plasmoid.configuration.iconSizePx
                 }
-                return parent.width
+                return Math.max(1, availableWidth)
             }
             height: width
 
