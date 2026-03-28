@@ -13,7 +13,7 @@ ConfigPage {
     readonly property bool cilioraStyleSelected: indicatorStyle.currentIndex === 1
     readonly property bool dashesStyleSelected: indicatorStyle.currentIndex === 2
     readonly property bool dotsStyleSelected: indicatorStyle.currentIndex === 3
-    readonly property bool segmentedStyleSelected: metroStyleSelected || cilioraStyleSelected
+    readonly property bool metroFamilyStyleSelected: metroStyleSelected
     readonly property bool shrinkControlsBrokenForStyle: metroStyleSelected || cilioraStyleSelected || dashesStyleSelected
     property alias cfg_groupIconEnabled: groupIconEnabled.currentIndex
     property alias cfg_indicatorProgress: indicatorProgress.checked
@@ -150,8 +150,7 @@ Kirigami.FormLayout {
         enabled: indicatorsEnabled.currentIndex
         id: indicatorStyle
         Kirigami.FormData.label: i18n("Indicator Style:")
-        Layout.fillWidth: true
-        Layout.minimumWidth: Kirigami.Units.gridUnit * 14
+        Layout.preferredWidth: Math.max(implicitContentWidth + Kirigami.Units.gridUnit * 4, Kirigami.Units.gridUnit * 8)
         model: [
             i18n("Metro"),
             i18n("Ciliora"),
@@ -240,7 +239,7 @@ Kirigami.FormLayout {
     }
 
     SpinBox {
-        enabled: indicatorsEnabled.currentIndex && !dotsStyleSelected
+        enabled: indicatorsEnabled.currentIndex && !dotsStyleSelected && !cilioraStyleSelected
         id: indicatorLength
         Kirigami.FormData.label: i18n("Indicator length (px):")
         from: 1
@@ -248,8 +247,14 @@ Kirigami.FormLayout {
     }
 
     Label {
-        visible: indicatorsEnabled.currentIndex && segmentedStyleSelected
-        text: i18n("In Metro and Ciliora, length is mainly visible for grouped windows with multiple indicator segments.")
+        visible: indicatorsEnabled.currentIndex && metroFamilyStyleSelected
+        text: i18n("In Metro, length is mainly visible for grouped windows with multiple indicator segments.")
+        font: Kirigami.Theme.smallFont
+    }
+
+    Label {
+        visible: indicatorsEnabled.currentIndex && cilioraStyleSelected
+        text: i18n("Ciliora uses equal segmented bars across the available width, so length does not apply.")
         font: Kirigami.Theme.smallFont
     }
 
@@ -276,8 +281,14 @@ Kirigami.FormLayout {
     }
 
     Label {
-        visible: indicatorsEnabled.currentIndex && segmentedStyleSelected
-        text: i18n("In Metro and Ciliora, margin mainly reduces the primary indicator segment.")
+        visible: indicatorsEnabled.currentIndex && metroFamilyStyleSelected
+        text: i18n("In Metro, margin mainly reduces the primary indicator segment.")
+        font: Kirigami.Theme.smallFont
+    }
+
+    Label {
+        visible: indicatorsEnabled.currentIndex && cilioraStyleSelected
+        text: i18n("In Ciliora, margin reduces the overall segmented bar width.")
         font: Kirigami.Theme.smallFont
     }
 

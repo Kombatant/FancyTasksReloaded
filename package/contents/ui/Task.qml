@@ -918,6 +918,7 @@ MouseArea {
                     var parentSize = !isVertical ? frame.width : frame.height;
                     var indicatorComputedSize;
                     var adjustment = isFirst ? adjust : 0
+                    var visibleStates = Math.min((task.childCount === 0) ? 1 : task.childCount, maxStates)
                     var parentSpacingAdjust = task.childCount >= 1 && maxStates >= 2 ? (spacing * 2.5) : 0 //Spacing fix for multiple items
                     if(plasmoid.configuration.indicatorDominantColor){
                         colorEval = decoColor
@@ -941,7 +942,7 @@ MouseArea {
                             indicatorComputedSize = mainSize - (Math.min(task.childCount, maxStates === 1 ? 0 : maxStates)  * (spacing + indicatorLength)) - adjust
                             break
                             case 1:
-                            indicatorComputedSize = mainSize - (Math.min(task.childCount, maxStates === 1 ? 0 : maxStates)  * (spacing + indicatorLength)) - adjust
+                            indicatorComputedSize = (mainSize - adjust - (Math.max(0, visibleStates - 1) * spacing)) / visibleStates
                             break
                             case 2:
                             indicatorComputedSize = (plasmoid.configuration.indicatorGrow && task.state !== "minimized" ? indicatorLength * growFactor : indicatorLength) - adjustment
@@ -956,7 +957,13 @@ MouseArea {
                         }
                     }
                     else {
-                        indicatorComputedSize = task.isDots ? plasmoid.configuration.indicatorSize : indicatorLength
+                        if (task.isDots) {
+                            indicatorComputedSize = plasmoid.configuration.indicatorSize
+                        } else if (plasmoid.configuration.indicatorStyle === 1) {
+                            indicatorComputedSize = (parentSize - (Math.max(0, visibleStates - 1) * spacing)) / visibleStates
+                        } else {
+                            indicatorComputedSize = indicatorLength
+                        }
                     }
                     indicatorComputedSize = Math.max(1, indicatorComputedSize)
                     if(task.isDots) {
@@ -985,7 +992,7 @@ MouseArea {
                 width: computedVar.width
                 height: computedVar.height
                 color: plasmoid.configuration.indicatorStyle === 3 ? "transparent" : computedVar.colorCalc
-                radius: (Math.max(width, height) / Math.min(width,  height)) * (plasmoid.configuration.indicatorRadius / 100)
+                radius: (Math.min(width, height) / 2) * (plasmoid.configuration.indicatorRadius / 100)
                 Rectangle {
                     id: dotShape
                     visible: plasmoid.configuration.indicatorStyle === 3
