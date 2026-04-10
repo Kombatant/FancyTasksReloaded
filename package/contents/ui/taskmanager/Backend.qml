@@ -300,6 +300,34 @@ QtObject {
         return "";
     }
 
+    function desktopEntryIcon(launcherUrl) {
+        if (!launcherUrl) return "";
+
+        var key = launcherUrl.toString();
+        var content = _desktopFileCache[key];
+        if (!content) {
+            cacheDesktopFile(launcherUrl);
+            return "";
+        }
+
+        var lines = content.split("\n");
+        var currentSection = "";
+
+        for (var i = 0; i < lines.length; ++i) {
+            var line = lines[i].trim();
+            if (line.startsWith("[")) {
+                currentSection = line;
+                continue;
+            }
+
+            if (currentSection === "[Desktop Entry]" && line.startsWith("Icon=")) {
+                return line.substring(5);
+            }
+        }
+
+        return "";
+    }
+
     function requestNewInstance(index, launcherUrl) {
         if (launcherUrl) {
             var launcherPosition = tasksModel.launcherPosition(launcherUrl);

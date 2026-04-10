@@ -66,7 +66,8 @@ function maxStripes() {
     var length = tasks.vertical ? taskList.width : taskList.height;
     var minimum = tasks.vertical ? preferredMinWidth() : preferredMinHeight();
 
-    return Math.min(plasmoid.configuration.maxStripes, Math.max(1, Math.floor(length / minimum)));
+    return Math.min(plasmoid.configuration.maxStripes,
+        Math.max(1, Math.floor((length + taskList.spacing) / (minimum + taskList.spacing))));
 }
 
 function tasksPerStripe() {
@@ -76,7 +77,7 @@ function tasksPerStripe() {
         var length = tasks.vertical ? taskList.height : taskList.width;
         var minimum = tasks.vertical ? preferredMinHeight() : preferredMinWidth();
 
-        return Math.floor(length / minimum);
+        return Math.max(1, Math.floor((length + taskList.spacing) / (minimum + taskList.spacing)));
     }
 }
 
@@ -104,7 +105,8 @@ function optimumCapacity(width, height) {
 
 function layoutWidth() {
     if (plasmoid.configuration.forceStripes && !tasks.vertical) {
-        return Math.min(tasks.width - (tasksPerStripe() * plasmoid.configuration.taskSpacingSize), Math.max(preferredMaxWidth(), tasksPerStripe() * preferredMaxWidth()));
+        return Math.min(tasks.width - (Math.max(0, tasksPerStripe() - 1) * plasmoid.configuration.taskSpacingSize),
+            Math.max(preferredMaxWidth(), tasksPerStripe() * preferredMaxWidth()));
     } else {
         return tasks.width;
     }
@@ -112,7 +114,8 @@ function layoutWidth() {
 
 function layoutHeight() {
     if (plasmoid.configuration.forceStripes && tasks.vertical) {
-        return Math.min(tasks.height - (tasksPerStripe() * plasmoid.configuration.taskSpacingSize), Math.max(preferredMaxHeight(), tasksPerStripe() * preferredMaxHeight()));
+        return Math.min(tasks.height - (Math.max(0, tasksPerStripe() - 1) * plasmoid.configuration.taskSpacingSize),
+            Math.max(preferredMaxHeight(), tasksPerStripe() * preferredMaxHeight()));
     } else {
         return tasks.height;
     }
@@ -179,26 +182,36 @@ function minimumMColumns() {
 }
 
 function taskWidth() {
+    var stripes = calculateStripes();
+
     if (tasks.vertical) {
-        return Math.floor(taskList.width / calculateStripes());
+        return Math.floor((taskList.width - ((stripes - 1) * taskList.spacing)) / stripes);
     } else {
         if (full() && Math.max(1, logicalTaskCount()) > tasksPerStripe()) {
-            return Math.floor(taskList.width / Math.ceil(logicalTaskCount() / maxStripes()));
+            var perStripeCount = Math.ceil(logicalTaskCount() / maxStripes());
+            return Math.floor((taskList.width - ((perStripeCount - 1) * taskList.spacing)) / perStripeCount);
         } else {
-            return Math.min(preferredMaxWidth(), Math.floor(taskList.width / Math.min(logicalTaskCount(), tasksPerStripe())));
+            var visibleCount = Math.max(1, Math.min(logicalTaskCount(), tasksPerStripe()));
+            return Math.min(preferredMaxWidth(),
+                Math.floor((taskList.width - ((visibleCount - 1) * taskList.spacing)) / visibleCount));
         }
     }
 }
 
 function taskHeight() {
+    var stripes = calculateStripes();
+
     if (tasks.vertical) {
         if (full() && Math.max(1, logicalTaskCount()) > tasksPerStripe()) {
-            return Math.floor(taskList.height / Math.ceil(logicalTaskCount() / maxStripes()));
+            var perStripeCount = Math.ceil(logicalTaskCount() / maxStripes());
+            return Math.floor((taskList.height - ((perStripeCount - 1) * taskList.spacing)) / perStripeCount);
         } else {
-            return Math.min(preferredMaxHeight(), Math.floor(taskList.height / Math.min(logicalTaskCount(), tasksPerStripe())));
+            var visibleCount = Math.max(1, Math.min(logicalTaskCount(), tasksPerStripe()));
+            return Math.min(preferredMaxHeight(),
+                Math.floor((taskList.height - ((visibleCount - 1) * taskList.spacing)) / visibleCount));
         }
     } else {
-        return Math.floor(taskList.height / calculateStripes());
+        return Math.floor((taskList.height - ((stripes - 1) * taskList.spacing)) / stripes);
     }
 }
 
@@ -265,6 +278,16 @@ function clampLayoutExtent(value) {
     return Math.max(1, Math.floor(value));
 }
 
+function shouldDisplayTaskItem(item) {
+    if (!item || !item.m) {
+        return false;
+    }
+
+    return item.m.IsWindow === true
+        || item.m.IsLauncher === true
+        || item.m.IsStartup === true;
+}
+
 function layout(container) {
     if (!canLayout(container)) {
         return;
@@ -297,6 +320,18 @@ function layout(container) {
         item = container.itemAt(i);
 
         if (!item) {
+            continue;
+        }
+
+        if (!shouldDisplayTaskItem(item)) {
+            console.log("[fancytasks_rld][layout]   item[" + i + "] hidden"
+                        + " appName=" + (item.appName || "?")
+                        + " IsLauncher=" + item.m.IsLauncher
+                        + " IsWindow=" + item.m.IsWindow
+                        + " IsStartup=" + item.m.IsStartup);
+            item.visible = false;
+            item.width = 0;
+            item.height = 0;
             continue;
         }
 

@@ -44,6 +44,22 @@ MouseArea {
     readonly property string appName: model.AppName || ""
     readonly property string appId: model.AppId ? model.AppId.replace(/\.desktop$/, "") : ""
     readonly property variant winIdList: model.WinIdList
+    readonly property var effectiveIconSource: {
+        if (model.decoration) {
+            return model.decoration;
+        }
+
+        var launcherIcon = backend.desktopEntryIcon(model.LauncherUrlWithoutIcon);
+        if (launcherIcon) {
+            return launcherIcon;
+        }
+
+        if (appId) {
+            return appId;
+        }
+
+        return "application-x-executable";
+    }
     property int itemIndex: index
     property bool inPopup: false
     property bool isWindow: model.IsWindow === true
@@ -826,7 +842,7 @@ MouseArea {
         id: frame
         Kirigami.ImageColors {
             id: imageColors
-            source: model.decoration
+            source: effectiveIconSource
         }
         property color dominantColor: imageColors.dominant
         property color indicatorColor: Kirigami.ColorUtils.tintWithAlpha(frame.dominantColor, tintColor, .38)
@@ -1171,7 +1187,7 @@ MouseArea {
             mainItem.pidParent = Qt.binding(() => model.AppPid !== undefined ? model.AppPid : 0);
             mainItem.windows = Qt.binding(() => model.WinIdList);
             mainItem.isGroup = Qt.binding(() => model.IsGroupParent === true);
-            mainItem.icon = Qt.binding(() => model.decoration);
+            mainItem.icon = Qt.binding(() => effectiveIconSource);
             mainItem.launcherUrl = Qt.binding(() => model.LauncherUrlWithoutIcon);
             mainItem.isLauncher = Qt.binding(() => model.IsLauncher === true);
             mainItem.isMinimizedParent = Qt.binding(() => model.IsMinimized === true);
@@ -1428,7 +1444,7 @@ MouseArea {
             Kirigami.Icon {
                 id: iconImage
                 anchors.fill: parent
-                source: model.decoration
+                source: effectiveIconSource
             }
 
             Item {
@@ -1766,7 +1782,7 @@ MouseArea {
                     Kirigami.Icon {
                         id: previewBadgeImage
                         anchors.fill: parent
-                        source: model.decoration
+                        source: effectiveIconSource
                     }
                 }
             }
