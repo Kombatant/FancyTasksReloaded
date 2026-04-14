@@ -1556,7 +1556,7 @@ MouseArea {
                                                 && resolvedWinUuid.length > 0
             readonly property real previewInset: Math.max(2, Math.round(Math.min(width, height) * 0.08))
             readonly property real previewExtent: Math.max(0, Math.min(width, height) - (previewInset * 2))
-            readonly property real badgeSize: Math.min(previewExtent * 0.36, Kirigami.Units.iconSizes.smallMedium)
+            readonly property real badgeSize: previewExtent * 0.5
             readonly property real badgePadding: Math.max(2, Math.round(badgeSize * 0.16))
             property double lastHeartbeat: 0
 
@@ -1737,7 +1737,7 @@ MouseArea {
                 z: 1
                 width: 0
                 height: 0
-                anchors.horizontalCenter: previewContent.horizontalCenter
+                anchors.right: previewContent.right
                 anchors.bottom: previewContent.bottom
                 anchors.bottomMargin: {
                     // Force re-evaluation when these change
