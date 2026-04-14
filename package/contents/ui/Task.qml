@@ -1075,7 +1075,7 @@ MouseArea {
                 AnchorChanges {
                     target: indicator
                     anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:undefined;
-                        horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+                        horizontalCenter:iconBox.horizontalCenter; verticalCenter:undefined}
                     }
                 PropertyChanges {
                     target: indicator
@@ -1097,7 +1097,7 @@ MouseArea {
                 AnchorChanges {
                     target: indicator
                     anchors{ top:undefined; bottom:undefined; left:parent.left; right:undefined;
-                        horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+                        horizontalCenter:undefined; verticalCenter:iconBox.verticalCenter}
                 }
                 PropertyChanges {
                     target: indicator
@@ -1119,7 +1119,7 @@ MouseArea {
                 AnchorChanges {
                     target: indicator
                     anchors{ top:undefined; bottom:undefined; left:undefined; right:parent.right;
-                        horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+                        horizontalCenter:undefined; verticalCenter:iconBox.verticalCenter}
                 }
                 PropertyChanges {
                     target: indicator
@@ -1142,7 +1142,7 @@ MouseArea {
                 AnchorChanges {
                     target: indicator
                     anchors{ top:parent.top; bottom:undefined; left:undefined; right:undefined;
-                        horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+                        horizontalCenter:iconBox.horizontalCenter; verticalCenter:undefined}
                 }
                 PropertyChanges {
                     target: indicator
