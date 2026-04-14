@@ -885,6 +885,7 @@ MouseArea {
             ? Math.max(plasmoid.configuration.indicatorSize, Math.round(Kirigami.Units.smallSpacing * 1.5))
             : Math.max(plasmoid.configuration.indicatorSize, plasmoid.configuration.indicatorLength)
         readonly property int effectiveThickness: task.isDots ? dotDiameter : plasmoid.configuration.indicatorSize
+        readonly property int extraBottomSeparation: Math.max(4, Math.round(Kirigami.Units.smallSpacing))
         Repeater {
 
             model: {
@@ -1069,7 +1070,7 @@ MouseArea {
                     width: undefined
                     height: indicator.effectiveThickness
                     anchors.topMargin: 0;
-                    anchors.bottomMargin: plasmoid.configuration.indicatorEdgeOffset;
+                    anchors.bottomMargin: plasmoid.configuration.indicatorEdgeOffset - indicator.extraBottomSeparation;
                     anchors.leftMargin: 0;
                     anchors.rightMargin: 0;
                 }
@@ -1411,61 +1412,70 @@ MouseArea {
                 }
             ]
 
-            DropShadow {
-                anchors.fill: iconImage
-                visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 0 && icon.opacity > 0
-                cached: true
-                transparentBorder: true
-                horizontalOffset: Math.max(1, Math.round(iconImage.width * 0.05))
-                verticalOffset: Math.max(1, Math.round(iconImage.height * 0.06))
-                radius: Math.max(4, Math.round(iconImage.height * 0.16))
-                samples: Math.max(9, 1 + (radius * 2))
-                color: task.iconShadowColor
-                source: iconImage
-            }
+            Item {
+                id: iconVisual
+                anchors.centerIn: parent
+                readonly property int renderBaseSize: 128
+                width: renderBaseSize
+                height: renderBaseSize
+                scale: Math.max(icon.width, icon.height) / renderBaseSize
 
-            DropShadow {
-                anchors.fill: iconImage
-                visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 1 && icon.opacity > 0
-                cached: true
-                transparentBorder: true
-                horizontalOffset: Math.max(1, Math.round(iconImage.width * 0.03))
-                verticalOffset: Math.max(1, Math.round(iconImage.height * 0.03))
-                radius: Math.max(3, Math.round(iconImage.height * 0.08))
-                samples: Math.max(9, 1 + (radius * 2))
-                color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 0.8))
-                source: iconImage
-            }
+                DropShadow {
+                    anchors.fill: iconImage
+                    visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 0 && icon.opacity > 0
+                    cached: true
+                    transparentBorder: true
+                    horizontalOffset: Math.max(1, Math.round(iconImage.width * 0.05))
+                    verticalOffset: Math.max(1, Math.round(iconImage.height * 0.06))
+                    radius: Math.max(4, Math.round(iconImage.height * 0.16))
+                    samples: Math.max(9, 1 + (radius * 2))
+                    color: task.iconShadowColor
+                    source: iconImage
+                }
 
-            DropShadow {
-                anchors.fill: iconImage
-                visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 1 && icon.opacity > 0
-                cached: true
-                transparentBorder: true
-                horizontalOffset: Math.max(2, Math.round(iconImage.width * 0.07))
-                verticalOffset: Math.max(2, Math.round(iconImage.height * 0.12))
-                radius: Math.max(8, Math.round(iconImage.height * 0.24))
-                samples: Math.max(17, 1 + (radius * 2))
-                color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 0.45))
-                source: iconImage
-            }
+                DropShadow {
+                    anchors.fill: iconImage
+                    visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 1 && icon.opacity > 0
+                    cached: true
+                    transparentBorder: true
+                    horizontalOffset: Math.max(1, Math.round(iconImage.width * 0.03))
+                    verticalOffset: Math.max(1, Math.round(iconImage.height * 0.03))
+                    radius: Math.max(3, Math.round(iconImage.height * 0.08))
+                    samples: Math.max(9, 1 + (radius * 2))
+                    color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 0.8))
+                    source: iconImage
+                }
 
-            Glow {
-                anchors.fill: iconImage
-                visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 2 && icon.opacity > 0
-                cached: true
-                transparentBorder: true
-                radius: Math.max(6, Math.round(iconImage.height * 0.18))
-                samples: Math.max(13, 1 + (radius * 2))
-                spread: 0.18
-                color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 1.1))
-                source: iconImage
-            }
+                DropShadow {
+                    anchors.fill: iconImage
+                    visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 1 && icon.opacity > 0
+                    cached: true
+                    transparentBorder: true
+                    horizontalOffset: Math.max(2, Math.round(iconImage.width * 0.07))
+                    verticalOffset: Math.max(2, Math.round(iconImage.height * 0.12))
+                    radius: Math.max(8, Math.round(iconImage.height * 0.24))
+                    samples: Math.max(17, 1 + (radius * 2))
+                    color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 0.45))
+                    source: iconImage
+                }
 
-            Kirigami.Icon {
-                id: iconImage
-                anchors.fill: parent
-                source: effectiveIconSource
+                Glow {
+                    anchors.fill: iconImage
+                    visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 2 && icon.opacity > 0
+                    cached: true
+                    transparentBorder: true
+                    radius: Math.max(6, Math.round(iconImage.height * 0.18))
+                    samples: Math.max(13, 1 + (radius * 2))
+                    spread: 0.18
+                    color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 1.1))
+                    source: iconImage
+                }
+
+                Kirigami.Icon {
+                    id: iconImage
+                    anchors.fill: parent
+                    source: effectiveIconSource
+                }
             }
 
             Item {
@@ -1513,6 +1523,8 @@ MouseArea {
         Item {
             id: minimizedPreview
             anchors.centerIn: parent
+            anchors.horizontalCenterOffset: icon.anchors.horizontalCenterOffset
+            anchors.verticalCenterOffset: icon.anchors.verticalCenterOffset
             width: icon.width
             height: icon.height
 
@@ -1559,9 +1571,10 @@ MouseArea {
 
             Rectangle {
                 id: previewFrameOverlay
-                anchors.centerIn: parent
-                width: minimizedPreview.width + icon.framePadding
-                height: minimizedPreview.height + icon.framePadding
+                x: -icon.leftIndicatorReserve - icon.framePaddingHalf
+                y: -icon.topIndicatorReserve - icon.framePaddingHalf - icon.shadowVerticalShift
+                width: minimizedPreview.width + icon.leftIndicatorReserve + icon.rightIndicatorReserve + icon.framePadding
+                height: minimizedPreview.height + icon.topIndicatorReserve + icon.bottomIndicatorReserve + icon.framePadding
                 radius: Math.round(Math.min(width, height) * 0.28)
                 color: task.iconFrameFillColor()
                 border.width: task.darkPanel
@@ -1800,10 +1813,19 @@ MouseArea {
                         source: previewBadgeImage
                     }
 
-                    Kirigami.Icon {
-                        id: previewBadgeImage
-                        anchors.fill: parent
-                        source: effectiveIconSource
+                    Item {
+                        id: previewBadgeVisual
+                        anchors.centerIn: parent
+                        readonly property int renderBaseSize: 64
+                        width: renderBaseSize
+                        height: renderBaseSize
+                        scale: Math.max(previewBadgeIcon.width, previewBadgeIcon.height) / renderBaseSize
+
+                        Kirigami.Icon {
+                            id: previewBadgeImage
+                            anchors.fill: parent
+                            source: effectiveIconSource
+                        }
                     }
                 }
             }
