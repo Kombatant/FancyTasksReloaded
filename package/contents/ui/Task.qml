@@ -264,6 +264,18 @@ MouseArea {
             amount = Math.min(12, span * 0.12);
         } else {
             amount = span * 0.32 * hoverEffectProgress(item);
+
+            // For magnify mode, scaling already provides most of the dock effect.
+            // Translating toward the panel edge is what causes the icon to clip.
+            if (axis === "y"
+                && (plasmoid.location === PlasmaCore.Types.BottomEdge
+                    || plasmoid.location === PlasmaCore.Types.TopEdge)) {
+                amount = 0;
+            } else if (axis === "x"
+                && (plasmoid.location === PlasmaCore.Types.LeftEdge
+                    || plasmoid.location === PlasmaCore.Types.RightEdge)) {
+                amount *= 0.15;
+            }
         }
 
         if (amount <= 0) {

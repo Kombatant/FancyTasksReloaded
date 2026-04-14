@@ -19,9 +19,22 @@ function refreshConstants() {
     }
 }
 
+function effectiveIconSpacing() {
+    if (Kirigami.Settings.tabletMode) {
+        return 3;
+    }
+
+    if ((plasmoid.configuration.hoverEffectsEnabled || plasmoid.configuration.hoverBounce)
+        && Number(plasmoid.configuration.hoverEffectMode || 0) === 1) {
+        return 3;
+    }
+
+    return plasmoid.configuration.iconSpacing;
+}
+
 function horizontalMargins() {
     refreshConstants();
-    const spacingAdjustment = Kirigami.Settings.tabletMode ? 3 : plasmoid.configuration.iconSpacing;
+    const spacingAdjustment = effectiveIconSpacing();
     const baseMargins = taskFrame.margins.left + taskFrame.margins.right;
 
     // Some Plasma themes expose zero horizontal SVG margins for task buttons,
@@ -32,7 +45,7 @@ function horizontalMargins() {
 
 function verticalMargins() {
     refreshConstants();
-    const spacingAdjustment = Kirigami.Settings.tabletMode ? 3 : plasmoid.configuration.iconSpacing;
+    const spacingAdjustment = effectiveIconSpacing();
     const baseMargins = taskFrame.margins.top + taskFrame.margins.bottom;
 
     return Math.max(baseMargins, Math.round(tasks.smallSpacing / 2)) * spacingAdjustment;

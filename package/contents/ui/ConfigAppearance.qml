@@ -58,6 +58,10 @@ ConfigPage {
         return Number(cfg_hoverEffectMode || 0) === 1 ? 2 : 1;
     }
 
+    function hoverEffectsForceLargeIconSpacing() {
+        return Number(cfg_hoverEffectMode || 0) === 1 && cfg_hoverEffectsEnabled;
+    }
+
     function applyHoverEffectsSelection(index) {
         switch (index) {
         case 0:
@@ -308,6 +312,7 @@ Kirigami.FormLayout {
     }
 
     ComboBox {
+        id: iconSpacing
         Kirigami.FormData.label: i18n("Spacing between icons:")
 
         model: [
@@ -326,10 +331,10 @@ Kirigami.FormLayout {
         ]
 
         textRole: "label"
-        enabled: !Kirigami.Settings.tabletMode
+        enabled: !Kirigami.Settings.tabletMode && !hoverEffectsForceLargeIconSpacing()
 
         currentIndex: {
-            if (Kirigami.Settings.tabletMode) {
+            if (Kirigami.Settings.tabletMode || hoverEffectsForceLargeIconSpacing()) {
                 return 2; // Large
             }
 
@@ -343,8 +348,14 @@ Kirigami.FormLayout {
     }
 
     Label {
-        visible: Kirigami.Settings.tabletMode
-        text: i18nc("@info:usagetip under a set of radio buttons when Touch Mode is on", "Automatically set to Large when in Touch Mode")
+        visible: Kirigami.Settings.tabletMode || hoverEffectsForceLargeIconSpacing()
+        text: {
+            if (Kirigami.Settings.tabletMode) {
+                return i18nc("@info:usagetip under a set of radio buttons when Touch Mode is on", "Automatically set to Large when in Touch Mode");
+            }
+
+            return i18nc("@info:usagetip under a set of radio buttons when magnify hover is enabled", "Automatically set to Large when using Magnifying Glass");
+        }
         font: Kirigami.Theme.smallFont
     }
 }
