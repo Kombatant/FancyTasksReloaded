@@ -313,11 +313,6 @@ function layout(container) {
     var adjustedWidth = width;
     var height = taskHeight();
 
-    console.log("[fancytasks_rld][layout] layout() called; count=" + tasksModel.count
-                + " launcherCount=" + tasksModel.logicalLauncherCount
-                + " taskCount=" + taskCount + " stripes=" + stripes
-                + " width=" + width + " height=" + height);
-
     if (!tasks.vertical && stripes == 1 && taskCount)
     {
         var shrink = ((tasksModel.count - tasksModel.logicalLauncherCount) * preferredMaxWidth())
@@ -337,11 +332,6 @@ function layout(container) {
         }
 
         if (!shouldDisplayTaskItem(item)) {
-            console.log("[fancytasks_rld][layout]   item[" + i + "] hidden"
-                        + " appName=" + (item.appName || "?")
-                        + " IsLauncher=" + item.m.IsLauncher
-                        + " IsWindow=" + item.m.IsWindow
-                        + " IsStartup=" + item.m.IsStartup);
             item.visible = false;
             item.width = 0;
             item.height = 0;
@@ -360,11 +350,6 @@ function layout(container) {
         }
 
         adjustedWidth = clampLayoutExtent(adjustedWidth);
-
-        console.log("[fancytasks_rld][layout]   item[" + i + "] appName=" + (item.appName || "?")
-                    + " IsLauncher=" + item.m.IsLauncher
-                    + " IsWindow=" + item.m.IsWindow
-                    + " w=" + adjustedWidth + " h=" + height);
 
         // Keep delegate slots stable while the icon itself animates. The
         // panel hover budget is handled separately at the container level.

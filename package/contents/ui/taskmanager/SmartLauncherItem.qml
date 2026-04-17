@@ -12,10 +12,6 @@ Item {
     property url launcherUrl
     property string appId: ""
     property string appName: ""
-    readonly property bool badgeDebugEnabled: appName === "Viber"
-        || appName === "Zen Browser"
-        || appId.toLowerCase() === "viber"
-        || appId.toLowerCase() === "zen"
     property bool isActiveWindow: false
     property int revision: 0
     property int syntheticIdCounter: 0
@@ -26,20 +22,7 @@ Item {
         revision;
         const unread = unreadCount();
         const live = liveNotificationCount();
-        const total = Math.max(unread, live, eventUnreadCount);
-        if (badgeDebugEnabled) {
-            console.log("[fancytasks_badge][SmartLauncher] recalc",
-                        "appName=", appName,
-                        "appId=", appId,
-                        "launcherUrl=", String(launcherUrl),
-                        "taskAliases=", JSON.stringify(taskAliases),
-                        "unreadCount=", unread,
-                        "liveNotificationCount=", live,
-                        "eventUnreadCount=", eventUnreadCount,
-                        "result=", total,
-                        "notificationsModel.count=", notificationsModel.count);
-        }
-        return total;
+        return Math.max(unread, live, eventUnreadCount);
     }
     readonly property bool countVisible: count > 0
     property bool urgent: countVisible
@@ -91,11 +74,6 @@ Item {
         if (isActiveWindow) {
             liveNotificationIds = ({});
             eventUnreadCount = 0;
-            if (badgeDebugEnabled) {
-                console.log("[fancytasks_badge][SmartLauncher] resetBecauseActive",
-                            "appName=", appName,
-                            "appId=", appId);
-            }
             revision++;
         }
     }
@@ -222,36 +200,6 @@ Item {
         return aliases;
     }
 
-    function debugNotification(prefix, notification, extra) {
-        const parts = [
-            "[fancytasks_badge]",
-            prefix,
-            "launcherUrl=", String(launcherUrl),
-            "appId=", appId,
-            "appName=", appName,
-            "taskAliases=", JSON.stringify(taskAliases)
-        ];
-
-        if (notification) {
-            parts.push("desktopEntry=", String(notification.desktopEntry));
-            parts.push("applicationName=", String(notification.applicationName));
-            parts.push("applicationIconName=", String(notification.applicationIconName));
-            parts.push("notifAliases=", JSON.stringify(aliasesForNotification(notification)));
-            if (notification.id !== undefined) {
-                parts.push("id=", String(notification.id));
-            }
-            if (notification.notificationId !== undefined) {
-                parts.push("notificationId=", String(notification.notificationId));
-            }
-        }
-
-        if (extra !== undefined) {
-            parts.push("extra=", JSON.stringify(extra));
-        }
-
-        console.log(parts.join(" "));
-    }
-
     function notificationObjectId(notification) {
         if (!notification) {
             return 0;
@@ -285,16 +233,7 @@ Item {
 
     function trackLiveNotification(notification) {
         const notificationAliases = aliasesForNotification(notification);
-        const matches = matchesAliases(notificationAliases);
-        if (badgeDebugEnabled || matches) {
-            debugNotification("trackLiveNotification", notification, {
-                matches: matches,
-                eventUnreadCount: eventUnreadCount,
-                liveNotificationCount: liveNotificationCount()
-            });
-        }
-
-        if (!matches) {
+        if (!matchesAliases(notificationAliases)) {
             return;
         }
 
@@ -307,12 +246,6 @@ Item {
         updated[String(id)] = true;
         liveNotificationIds = updated;
         eventUnreadCount++;
-        if (badgeDebugEnabled) {
-            debugNotification("tracked", notification, {
-                eventUnreadCount: eventUnreadCount,
-                liveNotificationCount: liveNotificationCount()
-            });
-        }
         revision++;
     }
 
@@ -325,11 +258,6 @@ Item {
         const updated = Object.assign({}, liveNotificationIds);
         delete updated[key];
         liveNotificationIds = updated;
-        if (badgeDebugEnabled) {
-            console.log("[fancytasks_badge][SmartLauncher] untrackLiveNotification id=", key,
-                        "eventUnreadCount=", eventUnreadCount,
-                        "liveNotificationCount=", liveNotificationCount());
-        }
         revision++;
     }
 
@@ -380,19 +308,7 @@ Item {
                 continue;
             }
 
-            const matches = notificationMatches(index);
-            if (!matches) {
-                if (badgeDebugEnabled) {
-                    console.log("[fancytasks_badge][SmartLauncher] unmatchedInsertedNotification",
-                                "appName=", appName,
-                                "appId=", appId,
-                                "row=", row,
-                                "desktopEntry=", notificationsModel.data(index, NotificationManager.Notifications.DesktopEntryRole),
-                                "applicationName=", notificationsModel.data(index, NotificationManager.Notifications.ApplicationNameRole),
-                                "applicationIconName=", notificationsModel.data(index, NotificationManager.Notifications.ApplicationIconNameRole),
-                                "originName=", notificationsModel.data(index, NotificationManager.Notifications.OriginNameRole),
-                                "summary=", notificationsModel.data(index, NotificationManager.Notifications.SummaryRole));
-                }
+            if (!notificationMatches(index)) {
                 continue;
             }
 
@@ -404,14 +320,6 @@ Item {
         }
 
         eventUnreadCount += matched;
-        if (badgeDebugEnabled) {
-            console.log("[fancytasks_badge][SmartLauncher] recordInsertedNotifications",
-                        "appName=", appName,
-                        "appId=", appId,
-                        "rows=", first, "-", last,
-                        "matched=", matched,
-                        "eventUnreadCount=", eventUnreadCount);
-        }
     }
 
     function unreadCount() {

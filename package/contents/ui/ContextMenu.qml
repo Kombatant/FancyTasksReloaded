@@ -364,7 +364,6 @@ PlasmaExtras.Menu {
                 menuItem.clicked.connect(function() {
                     tasksModel.requestVirtualDesktops(menu.modelIndex, []);
                 });
-                backend.setActionGroup(menuItem.action);
 
                 menu.newSeparator(virtualDesktopsMenu);
 
@@ -378,7 +377,6 @@ PlasmaExtras.Menu {
                     menuItem.clicked.connect((function(i) {
                         return function() { return tasksModel.requestVirtualDesktops(menu.modelIndex, [virtualDesktopInfo.desktopIds[i]]); };
                     })(i));
-                    backend.setActionGroup(menuItem.action);
                 }
 
                 menu.newSeparator(virtualDesktopsMenu);

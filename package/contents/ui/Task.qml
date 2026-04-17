@@ -10,12 +10,9 @@ import org.kde.ksvg as KSvg
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.draganddrop 2.0
 import org.kde.kirigami 2.20 as Kirigami
 
 import "taskmanager" as TaskManagerApplet
-
-import QtQuick.Layouts 1.3
 
 import Qt5Compat.GraphicalEffects
 
@@ -35,11 +32,7 @@ MouseArea {
     LayoutMirroring.childrenInherit: (Qt.application.layoutDirection == Qt.RightToLeft)
 
     readonly property var m: model
-    readonly property bool badgeDebugEnabled: appName === "Viber"
-        || appName === "Zen Browser"
-        || appId.toLowerCase() === "viber"
-        || appId.toLowerCase() === "zen"
-    
+
     readonly property int pid: model.AppPid !== undefined ? model.AppPid : 0
     readonly property string appName: model.AppName || ""
     readonly property string appId: model.AppId ? model.AppId.replace(/\.desktop$/, "") : ""
@@ -312,9 +305,6 @@ MouseArea {
 
     onHighlightedChanged: {
         // ensure it doesn't get stuck with a window highlighted
-        console.log("[fancytasks_rld][Task] onHighlightedChanged; highlighted=", highlighted, "frame.isHovered=", frame.isHovered, "plasmoid.location=", plasmoid.location);
-        // also print current transform state if available
-        try { console.log("[fancytasks_rld][Task] transform: hoverTranslate.x=", hoverTranslate.x, "hoverScale=", hoverScale.xScale); } catch (e) {}
         backend.cancelHighlightWindows();
     }
 
@@ -331,18 +321,11 @@ MouseArea {
         }
 
         if (smartLauncherItemComponent.status !== Component.Ready) {
-            console.log("[fancytasks_badge][Task] SmartLauncher component not ready",
-                        "appName=", appName,
-                        "status=", smartLauncherItemComponent.status,
-                        "error=", smartLauncherItemComponent.errorString());
             return;
         }
 
         const smartLauncher = smartLauncherItemComponent.createObject(task);
         if (!smartLauncher) {
-            console.log("[fancytasks_badge][Task] SmartLauncher createObject failed",
-                        "appName=", appName,
-                        "error=", smartLauncherItemComponent.errorString());
             return;
         }
 
@@ -365,13 +348,6 @@ MouseArea {
     function clearAttentionBadgeState(reason) {
         attentionBadgeCount = 0;
         lastDemandingAttention = false;
-        if (badgeDebugEnabled) {
-            console.log("[fancytasks_badge][Task] clearAttentionBadgeState",
-                        "reason=", reason,
-                        "appName=", appName,
-                        "attentionBadgeCount=", attentionBadgeCount,
-                        "lastDemandingAttention=", lastDemandingAttention);
-        }
     }
 
     acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.BackButton | Qt.ForwardButton
@@ -391,9 +367,6 @@ MouseArea {
     onAppNameChanged: updateAudioStreams({delay: false})
 
     onIsWindowChanged: {
-        console.log("[fancytasks_rld][Task] onIsWindowChanged; isWindow=", isWindow,
-                    "appName=", appName, "itemIndex=", itemIndex,
-                    "IsLauncher=", model.IsLauncher, "HasLauncher=", model.HasLauncher);
         if (!isWindow) {
             clearAttentionBadgeState("notWindow");
         }
@@ -420,9 +393,6 @@ MouseArea {
     }
 
     onItemIndexChanged: {
-        console.log("[fancytasks_rld][Task] onItemIndexChanged; itemIndex=", itemIndex,
-                    "appName=", appName, "isWindow=", isWindow,
-                    "IsLauncher=", model.IsLauncher);
         hideToolTipTemporarily();
 
         if (!inPopup && !tasks.vertical
@@ -432,7 +402,6 @@ MouseArea {
     }
 
     onContainsMouseChanged:  {
-        console.log("[fancytasks_rld][Task] onContainsMouseChanged; containsMouse=", containsMouse, "task.highlighted=", highlighted);
         if (containsMouse) {
             if (inPopup) {
                 forceActiveFocus();
@@ -593,27 +562,10 @@ MouseArea {
         target: task
         function onMChanged() {
             const demandingAttention = model.IsDemandingAttention === true;
-            if (badgeDebugEnabled) {
-                console.log("[fancytasks_badge][Task] onMChanged",
-                            "appName=", appName,
-                            "itemIndex=", itemIndex,
-                            "IsActive=", model.IsActive,
-                            "IsDemandingAttention=", demandingAttention,
-                            "attentionBadgeCount=", attentionBadgeCount,
-                            "lastDemandingAttention=", lastDemandingAttention,
-                            "smartCount=", task.smartLauncherItem ? task.smartLauncherItem.count : -1,
-                            "effectiveBadgeCount=", effectiveBadgeCount);
-            }
             if (model.IsActive === true) {
                 if (demandingAttention) {
                     cancelActiveBadgeReset();
                     lastDemandingAttention = false;
-                    if (badgeDebugEnabled) {
-                        console.log("[fancytasks_badge][Task] activeDemandingAttentionCycle",
-                                    "appName=", appName,
-                                    "attentionBadgeCount=", attentionBadgeCount,
-                                    "lastDemandingAttention=", lastDemandingAttention);
-                    }
                     return;
                 }
 
@@ -636,39 +588,14 @@ MouseArea {
                 return;
             }
 
-            if (badgeDebugEnabled) {
-                console.log("[fancytasks_badge][Task] tasksModel.onDataChanged",
-                            "appName=", appName,
-                            "rows=", topLeft.row, "-", bottomRight.row,
-                            "itemIndex=", itemIndex,
-                            "IsActive=", model.IsActive,
-                            "IsDemandingAttention=", model.IsDemandingAttention,
-                            "attentionBadgeCount(before)=", attentionBadgeCount,
-                            "lastDemandingAttention(before)=", lastDemandingAttention,
-                            "smartCount=", task.smartLauncherItem ? task.smartLauncherItem.count : -1,
-                            "effectiveBadgeCount=", effectiveBadgeCount);
-            }
-
             if (model.IsActive === true) {
                 if (model.IsDemandingAttention === true) {
                     cancelActiveBadgeReset();
                     lastDemandingAttention = false;
-                    if (badgeDebugEnabled) {
-                        console.log("[fancytasks_badge][Task] activeDemandingAttentionCycle",
-                                    "appName=", appName,
-                                    "attentionBadgeCount=", attentionBadgeCount,
-                                    "lastDemandingAttention=", lastDemandingAttention);
-                    }
                     return;
                 }
 
                 scheduleActiveBadgeReset();
-                if (badgeDebugEnabled) {
-                    console.log("[fancytasks_badge][Task] scheduledResetBecauseActive",
-                                "appName=", appName,
-                                "attentionBadgeCount=", attentionBadgeCount,
-                                "lastDemandingAttention=", lastDemandingAttention);
-                }
                 return;
             }
 
@@ -677,32 +604,15 @@ MouseArea {
             const demandingAttention = model.IsDemandingAttention === true;
             if (!demandingAttention) {
                 lastDemandingAttention = false;
-                if (badgeDebugEnabled) {
-                    console.log("[fancytasks_badge][Task] clearDemandingAttention",
-                                "appName=", appName,
-                                "attentionBadgeCount=", attentionBadgeCount,
-                                "lastDemandingAttention=", lastDemandingAttention);
-                }
                 return;
             }
 
             if (lastDemandingAttention) {
-                if (badgeDebugEnabled) {
-                    console.log("[fancytasks_badge][Task] ignoredRepeatedDemandingAttention",
-                                "appName=", appName,
-                                "attentionBadgeCount=", attentionBadgeCount);
-                }
                 return;
             }
 
             lastDemandingAttention = true;
             attentionBadgeCount++;
-            if (badgeDebugEnabled) {
-                console.log("[fancytasks_badge][Task] incrementAttentionBadgeCount",
-                            "appName=", appName,
-                            "attentionBadgeCount=", attentionBadgeCount,
-                            "effectiveBadgeCount=", effectiveBadgeCount);
-            }
         }
     }
 
@@ -872,9 +782,6 @@ MouseArea {
         property string basePrefix: "normal"
         prefix: isHovered ? TaskTools.taskPrefixHovered(basePrefix) : TaskTools.taskPrefix(basePrefix)
         visible: plasmoid.configuration.buttonColorize ? false : true
-        onIsHoveredChanged: {
-            console.log("[fancytasks_rld][Task] frame.isHovered changed:", frame.isHovered, "task.highlighted:", highlighted, "plasmoid.location:", plasmoid.location);
-        }
     }
 
     ColorOverlay {
@@ -1262,8 +1169,6 @@ MouseArea {
             return margin;
 
         }
-
-        //width: inPopup ? PlasmaCore.Units.iconSizes.small : Math.min(height, parent.width - LayoutManager.horizontalMargins())
 
         Item {
             id: icon

@@ -16,7 +16,6 @@ QtObject {
 
     property Item taskManagerItem: null
     property bool highlightWindows: false
-    readonly property bool windowViewAvailable: false
 
     signal addLauncher(url url)
     signal showAllPlaces()
@@ -73,15 +72,6 @@ QtObject {
         _pendingHighlightWinIds = uuids;
         _pendingHighlightActive = hovered && uuids.length > 0;
         _highlightTimer.restart();
-    }
-
-    function activateWindowView(winIds) {
-    }
-
-    function ungrabMouse(item) {
-    }
-
-    function setActionGroup(action) {
     }
 
     // --- Process launcher for desktop actions ---

@@ -18,7 +18,6 @@ Item {
     property Item target
     property Item ignoredItem
     property bool isGroupDialog: false
-    property bool moved: false
 
     property alias hoveredItem: dropHandler.hoveredItem
     property alias handleWheelEvents: wheelHandler.active

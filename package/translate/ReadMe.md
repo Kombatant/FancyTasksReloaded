@@ -4,7 +4,7 @@ With KDE Frameworks v5.37 and above, translations are bundled with the `*.plasmo
 
 ## Install Translations
 
-Go to `~/.local/share/plasma/plasmoids/org.kombatant.fancytasks_rld/translate/` and run `sh ./build --restartplasma`.
+Go to `~/.local/share/plasma/plasmoids/FancyTasks Reloaded/translate/` and run `sh ./build --restartplasma`.
 
 ## New Translations
 
@@ -35,8 +35,8 @@ Or if you know how to make a pull request
 ## Status
 |  Locale  |  Lines  | % Done|
 |----------|---------|-------|
-| Template |     165 |       |
-| el       | 165/165 |  100% |
-| nl       | 165/165 |  100% |
-| pt_BR    | 165/165 |  100% |
-| zh_CN    | 165/165 |  100% |
+| Template |     184 |       |
+| el       | 164/184 |   89% |
+| nl       | 164/184 |   89% |
+| pt_BR    | 164/184 |   89% |
+| zh_CN    | 164/184 |   89% |

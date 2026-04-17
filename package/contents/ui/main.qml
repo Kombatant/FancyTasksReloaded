@@ -25,8 +25,6 @@ PlasmoidItem {
 
     anchors.fill: parent
 
-    property bool supportsLaunchers: true
-
     property bool vertical: plasmoid.formFactor === PlasmaCore.Types.Vertical
     property bool iconsOnly: plasmoid.configuration.iconOnly
     readonly property bool manualSorting: plasmoid.configuration.sortingStrategy === 1
@@ -201,7 +199,6 @@ PlasmoidItem {
 
     signal requestLayout
     signal windowsHovered(variant winIds, bool hovered)
-    signal activateWindowView(variant winIds)
 
     onWidthChanged: {
         taskList.width = LayoutManager.layoutWidth();
@@ -373,8 +370,6 @@ PlasmoidItem {
     Connections {
         target: tasksModel
         function onCountChanged() {
-            console.log("[fancytasks_rld] tasksModel.countChanged; count=", tasksModel.count,
-                        "launcherCount=", tasksModel.launcherCount);
             precacheTimer.restart();
         }
         // dataChanged fires when a model row's roles change *without*
@@ -384,8 +379,6 @@ PlasmoidItem {
         // recalculated.  Restarting the zero-interval layoutTimer
         // batches rapid-fire dataChanged signals into a single relayout.
         function onDataChanged(topLeft, bottomRight, roles) {
-            console.log("[fancytasks_rld] tasksModel.dataChanged; rows",
-                        topLeft.row, "-", bottomRight.row);
             layoutTimer.restart();
             // Reset the settle timer so we wait for the model to stop changing
             // before re-applying launcher positions.
@@ -394,7 +387,6 @@ PlasmoidItem {
             }
         }
         function onRowsMoved() {
-            console.log("[fancytasks_rld] tasksModel.rowsMoved");
             layoutTimer.restart();
             if (launcherReconcileTimer.running) {
                 launcherReconcileTimer.restart();
@@ -430,7 +422,6 @@ PlasmoidItem {
         repeat: false
         running: true          // starts ticking at Component creation
         onTriggered: {
-            console.log("[fancytasks_rld] launcherReconcileTimer fired — checking for misplaced tasks");
             var launchers = plasmoid.configuration.launchers;
 
             // Build URL → expected launcher position map.
@@ -466,8 +457,6 @@ PlasmoidItem {
                 // position.  With ≤2 preferred entries this is reliable.
                 for (var p = 0; p < preferredPositions.length && p < unmatchedItems.length; p++) {
                     urlToPos[unmatchedItems[p]] = preferredPositions[p];
-                    console.log("[fancytasks_rld] reconcile: resolved preferred pos "
-                              + preferredPositions[p] + " → " + unmatchedItems[p]);
                 }
             }
 
@@ -488,8 +477,6 @@ PlasmoidItem {
                     if (!url || urlToPos[url] === undefined) continue;
                     var expectedPos = urlToPos[url];
                     if (i !== expectedPos) {
-                        console.log("[fancytasks_rld] reconcile: MOVING " + item.m.AppName
-                                  + " from " + i + " to " + expectedPos);
                         tasksModel.move(i, expectedPos);
                         moved = true;
                         break; // restart scan — indices shifted
@@ -501,8 +488,6 @@ PlasmoidItem {
             // from move(), then allow config saves again.
             tasksModel.launcherList = launchers;
             tasks._reconciling = false;
-
-            console.log("[fancytasks_rld] reconcile done — " + pass + " passes");
         }
     }
 
@@ -680,7 +665,6 @@ PlasmoidItem {
         }
 
         function layout() {
-            console.log("[fancytasks_rld] taskList.layout() called");
             taskList.width = LayoutManager.layoutWidth();
             taskList.height = LayoutManager.layoutHeight();
             if (!LayoutManager.canLayout(taskRepeater)) {
@@ -696,7 +680,6 @@ PlasmoidItem {
             repeat: false
 
             onTriggered: {
-                console.log("[fancytasks_rld] layoutTimer fired");
                 taskList.layout();
             }
         }
@@ -708,9 +691,7 @@ PlasmoidItem {
                 readonly property bool isSubTask: false
             }
             onItemAdded: function(index, item) {
-                console.log("[fancytasks_rld] Repeater.onItemAdded; index=", index);
                 taskList.layout()
-
             }
             onItemRemoved: function(index, item) {
                 if (tasks.containsMouse && index != taskRepeater.count &&
@@ -791,7 +772,6 @@ PlasmoidItem {
         tasks.requestLayout.connect(layoutTimer.restart);
         tasks.requestLayout.connect(iconGeometryTimer.restart);
         tasks.windowsHovered.connect(backend.windowsHovered);
-        tasks.activateWindowView.connect(backend.activateWindowView);
         dragHelper.dropped.connect(resetDragSource);
     }
 }

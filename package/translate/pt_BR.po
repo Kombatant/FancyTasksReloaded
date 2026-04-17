@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: FancyTasks Reloaded\n"
-"Report-Msgid-Bugs-To: https://github.com/Kombatant/FancyTasksReloaded/issues\n"
-"POT-Creation-Date: 2026-03-12 17:39-0400\n"
+"Report-Msgid-Bugs-To: https://github.com/Kombatant/FancyTasksReloaded\n"
+"POT-Creation-Date: 2026-04-16 21:38-0400\n"
 "PO-Revision-Date: 2023-09-21 16:18-0300\n"
 "Last-Translator:  Douglas Guimarães <<dg2003gh@gmail.com>>\n"
 "Language-Team: \n"
@@ -55,16 +55,24 @@ msgid "Mark applications that play audio"
 msgstr "Marque os programas que estiverem tocando áudio"
 
 #: ../contents/ui/ConfigAppearance.qml
+msgid "Notification Badges (Experimental)"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
 msgid "Use plasma borders"
 msgstr "Usar bordas do plasma"
 
 #: ../contents/ui/ConfigAppearance.qml
-msgid "Hover effects"
-msgstr "Efeitos ao passar o mouse"
+msgid "Show window preview for minimized windows"
+msgstr ""
 
 #: ../contents/ui/ConfigAppearance.qml
-msgid "Hover effect type:"
-msgstr "Tipo de efeito ao passar o mouse:"
+msgid "Hover Effects:"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Frame"
+msgstr ""
 
 #: ../contents/ui/ConfigAppearance.qml
 msgid "Bounce"
@@ -73,6 +81,26 @@ msgstr "Salto"
 #: ../contents/ui/ConfigAppearance.qml
 msgid "Magnifying Glass"
 msgstr "Lupa"
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Icon Shadow type:"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Off"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Drop shadow"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Material shadow"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Glow"
+msgstr ""
 
 #: ../contents/ui/ConfigAppearance.qml
 msgid "Icon Scale"
@@ -198,6 +226,11 @@ msgctxt "@info:usagetip under a set of radio buttons when Touch Mode is on"
 msgid "Automatically set to Large when in Touch Mode"
 msgstr "Definir automaticamente para grande no \"Touch Mode\""
 
+#: ../contents/ui/ConfigAppearance.qml
+msgctxt "@info:usagetip under a set of radio buttons when magnify hover is enabled"
+msgid "Automatically set to Large when using Magnifying Glass"
+msgstr ""
+
 #: ../contents/ui/ConfigBehavior.qml
 msgid "Display:"
 msgstr "Exibir:"
@@ -237,26 +270,13 @@ msgid "Shows tooltip window thumbnails"
 msgstr "Mostre as visualizações da janela"
 
 #: ../contents/ui/ConfigBehavior.qml
-msgctxt "Completes the sentence 'Clicking grouped task shows windows side by side' "
-msgid "Shows windows side by side"
-msgstr "Mostre as janelas lado a lado"
-
-#: ../contents/ui/ConfigBehavior.qml
 msgctxt "Completes the sentence 'Clicking grouped task shows textual list' "
 msgid "Shows textual list"
 msgstr "Mostre uma lista com seus títulos"
 
 #: ../contents/ui/ConfigBehavior.qml
-msgid "Tooltips are disabled, so the windows will be displayed side by side instead."
-msgstr "As visualizações estão desativada, portanto as janelas serão exibidas lado a lado"
-
-#: ../contents/ui/ConfigBehavior.qml
-msgid "Tooltips are disabled, and the compositor does not support displaying windows side by side, so a textual list will be displayed instead"
-msgstr "As visualizações estão desativada e o compositor não suporta exibir as janelas lado a lado, portanto as janelas serão exibidas atráves da lista de títulos"
-
-#: ../contents/ui/ConfigBehavior.qml
-msgid "The compositor does not support displaying windows side by side, so a textual list will be displayed instead."
-msgstr "O compositor não suporta exibir as janelas lado a lado, portanto as janelas serão exibidas atráves da lista de títulos"
+msgid "Tooltips are disabled, so a textual list will be displayed instead."
+msgstr ""
 
 #: ../contents/ui/ConfigBehavior.qml
 msgid "Combine into single button"
@@ -505,6 +525,14 @@ msgid "Growth/Shrink factor:"
 msgstr "Fator de crecimento/encolhimento:"
 
 #: ../contents/ui/ConfigIndicators.qml
+msgid "Metro and Ciliora currently ignore shrink-on-minimize and growth/shrink factor."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid "Dashes currently does not apply shrink/grow only when minimized, so these controls are disabled."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
 msgid "Indicator size (px):"
 msgstr "Tamanho do indicador (px):"
 
@@ -513,12 +541,40 @@ msgid "Indicator length (px):"
 msgstr "Comprimento do indicador (px):"
 
 #: ../contents/ui/ConfigIndicators.qml
+msgid "In Metro, length is mainly visible for grouped windows with multiple indicator segments."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid "Ciliora uses equal segmented bars across the available width, so length does not apply."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
 msgid "Indicator Radius (%):"
 msgstr "Raio do Indicador (%)"
 
 #: ../contents/ui/ConfigIndicators.qml
+msgid "Dots are always circular, so radius does not apply to this style."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
 msgid "Indicator margin (px):"
 msgstr "Margin do indicador"
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid "In Metro, margin mainly reduces the primary indicator segment."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid "In Ciliora, margin reduces the overall segmented bar width."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid "In Dashes, margin mainly reduces the first dash."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid "Dots use Indicator size as the dot diameter. Length, radius, and margin do not apply."
+msgstr ""
 
 #: ../contents/ui/ConfigIndicators.qml
 msgid "Indicator Color:"
@@ -733,3 +789,22 @@ msgstr "Disponível também em %1"
 msgctxt "Which activities a window is currently on"
 msgid "Available on %1"
 msgstr "Disponível em %1"
+
+#~ msgctxt "Completes the sentence 'Clicking grouped task shows windows side by side' "
+#~ msgid "Shows windows side by side"
+#~ msgstr "Mostre as janelas lado a lado"
+
+#~ msgid "Tooltips are disabled, so the windows will be displayed side by side instead."
+#~ msgstr "As visualizações estão desativada, portanto as janelas serão exibidas lado a lado"
+
+#~ msgid "Tooltips are disabled, and the compositor does not support displaying windows side by side, so a textual list will be displayed instead"
+#~ msgstr "As visualizações estão desativada e o compositor não suporta exibir as janelas lado a lado, portanto as janelas serão exibidas atráves da lista de títulos"
+
+#~ msgid "The compositor does not support displaying windows side by side, so a textual list will be displayed instead."
+#~ msgstr "O compositor não suporta exibir as janelas lado a lado, portanto as janelas serão exibidas atráves da lista de títulos"
+
+#~ msgid "Hover effects"
+#~ msgstr "Efeitos ao passar o mouse"
+
+#~ msgid "Hover effect type:"
+#~ msgstr "Tipo de efeito ao passar o mouse:"

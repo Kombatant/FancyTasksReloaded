@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: FancyTasks Reloaded\n"
-"Report-Msgid-Bugs-To: https://github.com/Kombatant/FancyTasksReloaded/issues\n"
-"POT-Creation-Date: 2026-03-12 17:39-0400\n"
+"Report-Msgid-Bugs-To: https://github.com/Kombatant/FancyTasksReloaded\n"
+"POT-Creation-Date: 2026-04-16 21:38-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,15 +56,23 @@ msgid "Mark applications that play audio"
 msgstr ""
 
 #: ../contents/ui/ConfigAppearance.qml
+msgid "Notification Badges (Experimental)"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
 msgid "Use plasma borders"
 msgstr ""
 
 #: ../contents/ui/ConfigAppearance.qml
-msgid "Hover effects"
+msgid "Show window preview for minimized windows"
 msgstr ""
 
 #: ../contents/ui/ConfigAppearance.qml
-msgid "Hover effect type:"
+msgid "Hover Effects:"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Frame"
 msgstr ""
 
 #: ../contents/ui/ConfigAppearance.qml
@@ -73,6 +81,26 @@ msgstr ""
 
 #: ../contents/ui/ConfigAppearance.qml
 msgid "Magnifying Glass"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Icon Shadow type:"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Off"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Drop shadow"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Material shadow"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Glow"
 msgstr ""
 
 #: ../contents/ui/ConfigAppearance.qml
@@ -199,6 +227,11 @@ msgctxt "@info:usagetip under a set of radio buttons when Touch Mode is on"
 msgid "Automatically set to Large when in Touch Mode"
 msgstr ""
 
+#: ../contents/ui/ConfigAppearance.qml
+msgctxt "@info:usagetip under a set of radio buttons when magnify hover is enabled"
+msgid "Automatically set to Large when using Magnifying Glass"
+msgstr ""
+
 #: ../contents/ui/ConfigBehavior.qml
 msgid "Display:"
 msgstr ""
@@ -238,25 +271,12 @@ msgid "Shows tooltip window thumbnails"
 msgstr ""
 
 #: ../contents/ui/ConfigBehavior.qml
-msgctxt "Completes the sentence 'Clicking grouped task shows windows side by side' "
-msgid "Shows windows side by side"
-msgstr ""
-
-#: ../contents/ui/ConfigBehavior.qml
 msgctxt "Completes the sentence 'Clicking grouped task shows textual list' "
 msgid "Shows textual list"
 msgstr ""
 
 #: ../contents/ui/ConfigBehavior.qml
-msgid "Tooltips are disabled, so the windows will be displayed side by side instead."
-msgstr ""
-
-#: ../contents/ui/ConfigBehavior.qml
-msgid "Tooltips are disabled, and the compositor does not support displaying windows side by side, so a textual list will be displayed instead"
-msgstr ""
-
-#: ../contents/ui/ConfigBehavior.qml
-msgid "The compositor does not support displaying windows side by side, so a textual list will be displayed instead."
+msgid "Tooltips are disabled, so a textual list will be displayed instead."
 msgstr ""
 
 #: ../contents/ui/ConfigBehavior.qml
@@ -506,6 +526,14 @@ msgid "Growth/Shrink factor:"
 msgstr ""
 
 #: ../contents/ui/ConfigIndicators.qml
+msgid "Metro and Ciliora currently ignore shrink-on-minimize and growth/shrink factor."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid "Dashes currently does not apply shrink/grow only when minimized, so these controls are disabled."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
 msgid "Indicator size (px):"
 msgstr ""
 
@@ -514,11 +542,39 @@ msgid "Indicator length (px):"
 msgstr ""
 
 #: ../contents/ui/ConfigIndicators.qml
+msgid "In Metro, length is mainly visible for grouped windows with multiple indicator segments."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid "Ciliora uses equal segmented bars across the available width, so length does not apply."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
 msgid "Indicator Radius (%):"
 msgstr ""
 
 #: ../contents/ui/ConfigIndicators.qml
+msgid "Dots are always circular, so radius does not apply to this style."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
 msgid "Indicator margin (px):"
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid "In Metro, margin mainly reduces the primary indicator segment."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid "In Ciliora, margin reduces the overall segmented bar width."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid "In Dashes, margin mainly reduces the first dash."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid "Dots use Indicator size as the dot diameter. Length, radius, and margin do not apply."
 msgstr ""
 
 #: ../contents/ui/ConfigIndicators.qml

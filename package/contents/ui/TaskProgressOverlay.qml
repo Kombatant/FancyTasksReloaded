@@ -7,7 +7,6 @@
 import QtQuick 2.15
 
 import org.kde.ksvg as KSvg
-import org.kde.plasma.core as PlasmaCore
 
 import "code/tools.js" as TaskTools
 

@@ -7,7 +7,6 @@
 import QtQuick 2.15
 
 import org.kde.ksvg as KSvg
-import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami 2.20 as Kirigami
 import Qt5Compat.GraphicalEffects
 

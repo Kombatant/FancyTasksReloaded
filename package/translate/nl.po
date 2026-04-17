@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: FancyTasks Reloaded\n"
-"Report-Msgid-Bugs-To: https://github.com/Kombatant/FancyTasksReloaded/issues\n"
-"POT-Creation-Date: 2026-03-12 17:39-0400\n"
+"Report-Msgid-Bugs-To: https://github.com/Kombatant/FancyTasksReloaded\n"
+"POT-Creation-Date: 2026-04-16 21:38-0400\n"
 "PO-Revision-Date: 2023-07-13 22:27+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -56,16 +56,24 @@ msgid "Mark applications that play audio"
 msgstr "Programma's die audio afspelen markeren"
 
 #: ../contents/ui/ConfigAppearance.qml
+msgid "Notification Badges (Experimental)"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
 msgid "Use plasma borders"
 msgstr "Plasmakaders gebruiken"
 
 #: ../contents/ui/ConfigAppearance.qml
-msgid "Hover effects"
-msgstr "Zweefeffecten"
+msgid "Show window preview for minimized windows"
+msgstr ""
 
 #: ../contents/ui/ConfigAppearance.qml
-msgid "Hover effect type:"
-msgstr "Type zweefeffect:"
+msgid "Hover Effects:"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Frame"
+msgstr ""
 
 #: ../contents/ui/ConfigAppearance.qml
 msgid "Bounce"
@@ -74,6 +82,26 @@ msgstr "Stuiteren"
 #: ../contents/ui/ConfigAppearance.qml
 msgid "Magnifying Glass"
 msgstr "Vergrootglas"
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Icon Shadow type:"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Off"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Drop shadow"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Material shadow"
+msgstr ""
+
+#: ../contents/ui/ConfigAppearance.qml
+msgid "Glow"
+msgstr ""
 
 #: ../contents/ui/ConfigAppearance.qml
 msgid "Icon Scale"
@@ -199,6 +227,12 @@ msgctxt "@info:usagetip under a set of radio buttons when Touch Mode is on"
 msgid "Automatically set to Large when in Touch Mode"
 msgstr "Automatisch ingesteld op ‘Groot’ als de aanraakmodus is ingeschakeld"
 
+#: ../contents/ui/ConfigAppearance.qml
+msgctxt ""
+"@info:usagetip under a set of radio buttons when magnify hover is enabled"
+msgid "Automatically set to Large when using Magnifying Glass"
+msgstr ""
+
 #: ../contents/ui/ConfigBehavior.qml
 msgid "Display:"
 msgstr "Tonen:"
@@ -240,38 +274,13 @@ msgid "Shows tooltip window thumbnails"
 msgstr "Vensterminiaturen tonen"
 
 #: ../contents/ui/ConfigBehavior.qml
-msgctxt ""
-"Completes the sentence 'Clicking grouped task shows windows side by side' "
-msgid "Shows windows side by side"
-msgstr "Vensters naast elkaar tonen"
-
-#: ../contents/ui/ConfigBehavior.qml
 msgctxt "Completes the sentence 'Clicking grouped task shows textual list' "
 msgid "Shows textual list"
 msgstr "Vensterlĳst tonen"
 
 #: ../contents/ui/ConfigBehavior.qml
-msgid ""
-"Tooltips are disabled, so the windows will be displayed side by side instead."
+msgid "Tooltips are disabled, so a textual list will be displayed instead."
 msgstr ""
-"Vensterminiaturen zĳn uitgeschakeld; vensters worden naast elkaar getoond."
-
-#: ../contents/ui/ConfigBehavior.qml
-msgid ""
-"Tooltips are disabled, and the compositor does not support displaying "
-"windows side by side, so a textual list will be displayed instead"
-msgstr ""
-"Vensterminiaturen zĳn uitgeschakeld en de compositor heeft geen "
-"ondersteuning voor het tonen van vensters naast elkaar. Er wordt in plaats "
-"daarvan een lĳst getoond."
-
-#: ../contents/ui/ConfigBehavior.qml
-msgid ""
-"The compositor does not support displaying windows side by side, so a "
-"textual list will be displayed instead."
-msgstr ""
-"De compositor heeft geen ondersteuning voor het tonen van vensters naast "
-"elkaar; er wordt een lĳst getoond."
 
 #: ../contents/ui/ConfigBehavior.qml
 msgid "Combine into single button"
@@ -524,6 +533,18 @@ msgid "Growth/Shrink factor:"
 msgstr "Vergroot-/Verkleinfactor:"
 
 #: ../contents/ui/ConfigIndicators.qml
+msgid ""
+"Metro and Ciliora currently ignore shrink-on-minimize and growth/shrink "
+"factor."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid ""
+"Dashes currently does not apply shrink/grow only when minimized, so these "
+"controls are disabled."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
 msgid "Indicator size (px):"
 msgstr "Indicatorgrootte (in px):"
 
@@ -532,12 +553,46 @@ msgid "Indicator length (px):"
 msgstr "Indicatorbreedte (in px):"
 
 #: ../contents/ui/ConfigIndicators.qml
+msgid ""
+"In Metro, length is mainly visible for grouped windows with multiple "
+"indicator segments."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid ""
+"Ciliora uses equal segmented bars across the available width, so length does "
+"not apply."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
 msgid "Indicator Radius (%):"
 msgstr "Indicatorstraal (in %):"
 
 #: ../contents/ui/ConfigIndicators.qml
+msgid "Dots are always circular, so radius does not apply to this style."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
 msgid "Indicator margin (px):"
 msgstr "Indicatormarge (in px):"
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid "In Metro, margin mainly reduces the primary indicator segment."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid "In Ciliora, margin reduces the overall segmented bar width."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid "In Dashes, margin mainly reduces the first dash."
+msgstr ""
+
+#: ../contents/ui/ConfigIndicators.qml
+msgid ""
+"Dots use Indicator size as the dot diameter. Length, radius, and margin do "
+"not apply."
+msgstr ""
 
 #: ../contents/ui/ConfigIndicators.qml
 msgid "Indicator Color:"
@@ -752,6 +807,38 @@ msgstr "Ook actief op %1"
 msgctxt "Which activities a window is currently on"
 msgid "Available on %1"
 msgstr "Actief op %1"
+
+#~ msgctxt ""
+#~ "Completes the sentence 'Clicking grouped task shows windows side by side' "
+#~ msgid "Shows windows side by side"
+#~ msgstr "Vensters naast elkaar tonen"
+
+#~ msgid ""
+#~ "Tooltips are disabled, so the windows will be displayed side by side "
+#~ "instead."
+#~ msgstr ""
+#~ "Vensterminiaturen zĳn uitgeschakeld; vensters worden naast elkaar getoond."
+
+#~ msgid ""
+#~ "Tooltips are disabled, and the compositor does not support displaying "
+#~ "windows side by side, so a textual list will be displayed instead"
+#~ msgstr ""
+#~ "Vensterminiaturen zĳn uitgeschakeld en de compositor heeft geen "
+#~ "ondersteuning voor het tonen van vensters naast elkaar. Er wordt in "
+#~ "plaats daarvan een lĳst getoond."
+
+#~ msgid ""
+#~ "The compositor does not support displaying windows side by side, so a "
+#~ "textual list will be displayed instead."
+#~ msgstr ""
+#~ "De compositor heeft geen ondersteuning voor het tonen van vensters naast "
+#~ "elkaar; er wordt een lĳst getoond."
+
+#~ msgid "Hover effects"
+#~ msgstr "Zweefeffecten"
+
+#~ msgid "Hover effect type:"
+#~ msgstr "Type zweefeffect:"
 
 #~ msgid "Press OK to fix layout issues."
 #~ msgstr "Klik op oké om indelingsproblemen op te lossen."
