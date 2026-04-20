@@ -1680,57 +1680,6 @@ MouseArea {
                         }
                     ]
 
-                    DropShadow {
-                        anchors.fill: previewBadgeImage
-                        visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 0 && previewBadgeIcon.opacity > 0
-                        cached: true
-                        transparentBorder: true
-                        horizontalOffset: Math.max(1, Math.round(previewBadgeImage.width * 0.05))
-                        verticalOffset: Math.max(1, Math.round(previewBadgeImage.height * 0.06))
-                        radius: Math.max(3, Math.round(previewBadgeImage.height * 0.16))
-                        samples: Math.max(9, 1 + (radius * 2))
-                        color: task.iconShadowColor
-                        source: previewBadgeImage
-                    }
-
-                    DropShadow {
-                        anchors.fill: previewBadgeImage
-                        visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 1 && previewBadgeIcon.opacity > 0
-                        cached: true
-                        transparentBorder: true
-                        horizontalOffset: Math.max(1, Math.round(previewBadgeImage.width * 0.03))
-                        verticalOffset: Math.max(1, Math.round(previewBadgeImage.height * 0.03))
-                        radius: Math.max(2, Math.round(previewBadgeImage.height * 0.08))
-                        samples: Math.max(7, 1 + (radius * 2))
-                        color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 0.8))
-                        source: previewBadgeImage
-                    }
-
-                    DropShadow {
-                        anchors.fill: previewBadgeImage
-                        visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 1 && previewBadgeIcon.opacity > 0
-                        cached: true
-                        transparentBorder: true
-                        horizontalOffset: Math.max(1, Math.round(previewBadgeImage.width * 0.07))
-                        verticalOffset: Math.max(1, Math.round(previewBadgeImage.height * 0.12))
-                        radius: Math.max(5, Math.round(previewBadgeImage.height * 0.24))
-                        samples: Math.max(11, 1 + (radius * 2))
-                        color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 0.45))
-                        source: previewBadgeImage
-                    }
-
-                    Glow {
-                        anchors.fill: previewBadgeImage
-                        visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 2 && previewBadgeIcon.opacity > 0
-                        cached: true
-                        transparentBorder: true
-                        radius: Math.max(4, Math.round(previewBadgeImage.height * 0.18))
-                        samples: Math.max(9, 1 + (radius * 2))
-                        spread: 0.18
-                        color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 1.1))
-                        source: previewBadgeImage
-                    }
-
                     Item {
                         id: previewBadgeVisual
                         anchors.centerIn: parent
@@ -1738,6 +1687,57 @@ MouseArea {
                         width: renderBaseSize
                         height: renderBaseSize
                         scale: Math.max(previewBadgeIcon.width, previewBadgeIcon.height) / renderBaseSize
+
+                        DropShadow {
+                            anchors.fill: parent
+                            visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 0 && previewBadgeIcon.opacity > 0
+                            cached: true
+                            transparentBorder: true
+                            horizontalOffset: Math.max(1, Math.round(previewBadgeImage.width * 0.05))
+                            verticalOffset: Math.max(1, Math.round(previewBadgeImage.height * 0.06))
+                            radius: Math.max(3, Math.round(previewBadgeImage.height * 0.16))
+                            samples: Math.max(9, 1 + (radius * 2))
+                            color: task.iconShadowColor
+                            source: previewBadgeImage
+                        }
+
+                        DropShadow {
+                            anchors.fill: parent
+                            visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 1 && previewBadgeIcon.opacity > 0
+                            cached: true
+                            transparentBorder: true
+                            horizontalOffset: Math.max(1, Math.round(previewBadgeImage.width * 0.03))
+                            verticalOffset: Math.max(1, Math.round(previewBadgeImage.height * 0.03))
+                            radius: Math.max(2, Math.round(previewBadgeImage.height * 0.08))
+                            samples: Math.max(7, 1 + (radius * 2))
+                            color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 0.8))
+                            source: previewBadgeImage
+                        }
+
+                        DropShadow {
+                            anchors.fill: parent
+                            visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 1 && previewBadgeIcon.opacity > 0
+                            cached: true
+                            transparentBorder: true
+                            horizontalOffset: Math.max(1, Math.round(previewBadgeImage.width * 0.07))
+                            verticalOffset: Math.max(1, Math.round(previewBadgeImage.height * 0.12))
+                            radius: Math.max(5, Math.round(previewBadgeImage.height * 0.24))
+                            samples: Math.max(11, 1 + (radius * 2))
+                            color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 0.45))
+                            source: previewBadgeImage
+                        }
+
+                        Glow {
+                            anchors.fill: parent
+                            visible: plasmoid.configuration.floatingIconShadow && task.iconShadowType === 2 && previewBadgeIcon.opacity > 0
+                            cached: true
+                            transparentBorder: true
+                            radius: Math.max(4, Math.round(previewBadgeImage.height * 0.18))
+                            samples: Math.max(9, 1 + (radius * 2))
+                            spread: 0.18
+                            color: Qt.rgba(task.iconShadowColor.r, task.iconShadowColor.g, task.iconShadowColor.b, Math.min(1, task.iconShadowColor.a * 1.1))
+                            source: previewBadgeImage
+                        }
 
                         Kirigami.Icon {
                             id: previewBadgeImage

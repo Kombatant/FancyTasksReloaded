@@ -150,18 +150,8 @@ PlasmoidItem {
     Layout.minimumWidth: tasks.vertical ? 0 : LayoutManager.preferredMinWidth()
     Layout.minimumHeight: !tasks.vertical ? 0 : LayoutManager.preferredMinHeight()
 
-//BEGIN TODO: this is not precise enough: launchers are smaller than full tasks
-
-    Layout.preferredWidth: tasks.vertical ? Kirigami.Units.gridUnit * 10 + hoverPanelThicknessExtra :
-                           (LayoutManager.logicalTaskCount() === 0 ? 0.01 : //Return a small non-zero value to make the panel account for the change in size
-                           ((LayoutManager.logicalTaskCount() * LayoutManager.preferredMaxWidth()) / LayoutManager.calculateStripes()))
-
-
-    Layout.preferredHeight: !tasks.vertical ? Kirigami.Units.gridUnit * 2 + hoverPanelThicknessExtra :
-                            (LayoutManager.logicalTaskCount() === 0 ? 0.01 : //Same as above
-                            ((LayoutManager.logicalTaskCount() * LayoutManager.preferredMaxHeight()) / LayoutManager.calculateStripes()))
-
-//END TODO
+    Layout.preferredWidth: LayoutManager.preferredLayoutWidth()
+    Layout.preferredHeight: LayoutManager.preferredLayoutHeight()
 
     property Item dragSource: null
     property Item dragIgnoredItem: null
@@ -653,9 +643,9 @@ PlasmoidItem {
 
         flow: {
             if (tasks.vertical) {
-                return plasmoid.configuration.forceStripes ? Flow.LeftToRight : Flow.TopToBottom
+                return LayoutManager.forceFlowLayout() ? Flow.LeftToRight : Flow.TopToBottom
             }
-            return plasmoid.configuration.forceStripes ? Flow.TopToBottom : Flow.LeftToRight
+            return LayoutManager.forceFlowLayout() ? Flow.TopToBottom : Flow.LeftToRight
         }
 
         onAnimatingChanged: {

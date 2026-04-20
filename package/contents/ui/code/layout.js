@@ -66,13 +66,39 @@ function launcherLayoutTasks() {
 }
 
 function launcherLayoutWidthDiff() {
-    return (launcherLayoutTasks() * taskWidth()) - (tasksModel.logicalLauncherCount * launcherWidth());
+    var logicalLaunchers = launcherLayoutTasks();
+    var extraLauncherSpacing = Math.max(0,
+        tasksModel.logicalLauncherCount - logicalLaunchers) * taskList.spacing;
+
+    return (logicalLaunchers * taskWidth())
+        - (tasksModel.logicalLauncherCount * launcherWidth())
+        - extraLauncherSpacing;
 }
 
 function logicalTaskCount() {
     var count = (tasksModel.count - tasksModel.logicalLauncherCount) + launcherLayoutTasks();
 
     return Math.max(tasksModel.count ? 1 : 0, count);
+}
+
+function visibleTaskCount() {
+    return Math.max(0, tasksModel.count);
+}
+
+function visibleSpacing(count) {
+    return Math.max(0, count - 1) * taskList.spacing;
+}
+
+function horizontalLauncherCountForLayout(count) {
+    if (tasks.iconsOnly) {
+        return 0;
+    }
+
+    return Math.max(0, Math.min(tasksModel.logicalLauncherCount, count));
+}
+
+function forceFlowLayout() {
+    return plasmoid.configuration.forceStripes || plasmoid.configuration.maxStripes <= 1;
 }
 
 function maxStripes() {
@@ -102,6 +128,52 @@ function calculateStripes() {
 
 function full() {
     return (maxStripes() == calculateStripes());
+}
+
+function preferredLayoutWidth() {
+    if (tasks.vertical) {
+        return Kirigami.Units.gridUnit * 10 + tasks.hoverPanelThicknessExtra;
+    }
+
+    if (logicalTaskCount() === 0) {
+        // Return a small non-zero value to make the panel account for the
+        // change in size.
+        return 0.01;
+    }
+
+    if (calculateStripes() === 1) {
+        var count = visibleTaskCount();
+        var launcherCount = horizontalLauncherCountForLayout(count);
+        var windowCount = Math.max(0, count - launcherCount);
+
+        return Math.max(0.01,
+            (windowCount * preferredMaxWidth())
+            + (launcherCount * launcherWidth())
+            + visibleSpacing(count));
+    }
+
+    return (logicalTaskCount() * preferredMaxWidth()) / calculateStripes();
+}
+
+function preferredLayoutHeight() {
+    if (!tasks.vertical) {
+        return Kirigami.Units.gridUnit * 2 + tasks.hoverPanelThicknessExtra;
+    }
+
+    if (logicalTaskCount() === 0) {
+        // Return a small non-zero value to make the panel account for the
+        // change in size.
+        return 0.01;
+    }
+
+    if (calculateStripes() === 1) {
+        var count = visibleTaskCount();
+
+        return Math.max(0.01,
+            (count * preferredMaxHeight()) + visibleSpacing(count));
+    }
+
+    return (logicalTaskCount() * preferredMaxHeight()) / calculateStripes();
 }
 
 function optimumCapacity(width, height) {
@@ -200,6 +272,26 @@ function taskWidth() {
     if (tasks.vertical) {
         return Math.floor((taskList.width - ((stripes - 1) * taskList.spacing)) / stripes);
     } else {
+        if (stripes === 1) {
+            var count = Math.max(1, visibleTaskCount());
+            var launcherCount = horizontalLauncherCountForLayout(count);
+            var windowCount = Math.max(0, count - launcherCount);
+            var spacing = visibleSpacing(count);
+
+            if (windowCount > 0) {
+                var launcherBudget = launcherCount * launcherWidth();
+                var availableForWindows = taskList.width - spacing - launcherBudget;
+
+                if (availableForWindows >= windowCount) {
+                    return Math.min(preferredMaxWidth(),
+                        Math.floor(availableForWindows / windowCount));
+                }
+            }
+
+            return Math.min(preferredMaxWidth(),
+                Math.floor((taskList.width - spacing) / count));
+        }
+
         if (full() && Math.max(1, logicalTaskCount()) > tasksPerStripe()) {
             var perStripeCount = Math.ceil(logicalTaskCount() / maxStripes());
             return Math.floor((taskList.width - ((perStripeCount - 1) * taskList.spacing)) / perStripeCount);
@@ -308,21 +400,26 @@ function layout(container) {
 
     var item;
     var stripes = calculateStripes();
-    var taskCount = tasksModel.count - tasksModel.logicalLauncherCount;
-    var width = taskWidth();
+    var width = clampLayoutExtent(taskWidth());
     var adjustedWidth = width;
-    var height = taskHeight();
+    var height = clampLayoutExtent(taskHeight());
+    var shrinkSingleStripeLaunchers = false;
+    var singleStripeLauncherWidth = launcherWidth();
 
-    if (!tasks.vertical && stripes == 1 && taskCount)
+    if (!tasks.vertical && stripes == 1)
     {
-        var shrink = ((tasksModel.count - tasksModel.logicalLauncherCount) * preferredMaxWidth())
-            + (tasksModel.logicalLauncherCount * launcherWidth()) > taskList.width;
-        width = Math.min(shrink ? width + Math.floor(launcherLayoutWidthDiff() / taskCount) : width,
-            preferredMaxWidth());
+        var visibleCount = visibleTaskCount();
+        var launcherCount = horizontalLauncherCountForLayout(visibleCount);
+        var spacing = visibleSpacing(visibleCount);
+
+        shrinkSingleStripeLaunchers = launcherCount > 0
+            && ((launcherCount * singleStripeLauncherWidth)
+                + (Math.max(0, visibleCount - launcherCount) * width)
+                + spacing > taskList.width);
     }
 
-    width = clampLayoutExtent(width);
-    height = clampLayoutExtent(height);
+    singleStripeLauncherWidth = clampLayoutExtent(shrinkSingleStripeLaunchers
+        ? width : singleStripeLauncherWidth);
 
     for (var i = 0; i < container.count; ++i) {
         item = container.itemAt(i);
@@ -343,7 +440,7 @@ function layout(container) {
         if (!tasks.vertical && !tasks.iconsOnly && (tasks.effectiveSeparateLaunchers || stripes == 1)) {
             if (item.m.IsLauncher === true
                 || (!tasks.effectiveSeparateLaunchers && item.m.IsStartup === true && item.m.HasLauncher === true)) {
-                adjustedWidth = launcherWidth();
+                adjustedWidth = stripes == 1 ? singleStripeLauncherWidth : launcherWidth();
             } else if (stripes > 1 && i == tasksModel.logicalLauncherCount) {
                 adjustedWidth += launcherLayoutWidthDiff();
             }
